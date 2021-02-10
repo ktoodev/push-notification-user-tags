@@ -54,6 +54,18 @@ function create_block_push_tags_signup() {
 		'default_tags' => array (
 			'type' => 'object',
 			'default' => array()
+		),
+		'show_categories' => array (
+			'type' => 'boolean',
+			'default' => true
+		),
+		'show_new_categories' => array (
+			'type' => 'boolean',
+			'default' => true
+		),
+		'select_new_categories' => array (
+			'type' => 'boolean',
+			'default' => false
 		)
 	);
 

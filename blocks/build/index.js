@@ -276,6 +276,27 @@ function Edit(_ref) {
         visible: visible
       })))
     });
+  }; // change setting for showing categories
+
+
+  var onChangeShowCategories = function onChangeShowCategories(newValue) {
+    setAttributes({
+      show_categories: newValue
+    });
+  }; // change setting for showing categories
+
+
+  var onChangeShowNewCategories = function onChangeShowNewCategories(newValue) {
+    setAttributes({
+      show_new_categories: newValue
+    });
+  }; // change setting for showing categories
+
+
+  var onChangeSelectNewCategories = function onChangeSelectNewCategories(newValue) {
+    setAttributes({
+      select_new_categories: newValue
+    });
   }; // initialize the default tag status
 
 
@@ -381,11 +402,30 @@ function Edit(_ref) {
     _loop(key);
   }
 
-  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), tag_list, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["TextControl"], {
+  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), attributes.show_categories ? tag_list : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["TextControl"], {
     label: "Button text",
     value: attributes.button_text,
     onChange: onChangeButtonText
-  })));
+  })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
+    initialOpen: true
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+    label: "Show individual push categories",
+    onChange: onChangeShowCategories,
+    checked: attributes.show_categories
+  }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
+    title: "Future categories",
+    initialOpen: true
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["__experimentalText"], null, "What should we do when new push categories are added in the admin section?")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+    label: "Show new categories by default",
+    help: "When new categories are added in the admin panel, should they be visible by default?",
+    onChange: onChangeShowNewCategories,
+    checked: attributes.show_new_categories
+  })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+    label: "Select new categories by default",
+    help: "When new categories are added in the admin panel, should they be checked by default?",
+    onChange: onChangeSelectNewCategories,
+    checked: attributes.select_new_categories
+  })))));
 }
 
 /***/ }),

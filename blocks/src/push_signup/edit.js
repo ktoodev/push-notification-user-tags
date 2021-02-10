@@ -22,7 +22,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 import './editor.scss';
 
 import { InspectorControls} from '@wordpress/block-editor';
-import { PanelBody, PanelRow, ToggleControl, TextControl, CheckboxControl, IconButton    } from '@wordpress/components';
+import { Panel, PanelBody, PanelRow, ToggleControl, __experimentalText as Text, TextControl, CheckboxControl, IconButton    } from '@wordpress/components';
 
 import { useEffect } from '@wordpress/element';
 
@@ -74,6 +74,24 @@ export default function Edit({attributes, setAttributes }) {
 	}
 
 
+	// change setting for showing categories
+	const onChangeShowCategories = ( newValue ) => {
+		setAttributes ( { show_categories: newValue });
+	}
+
+	
+	// change setting for showing categories
+	const onChangeShowNewCategories = ( newValue ) => {
+		setAttributes ( { show_new_categories: newValue });
+	}
+
+	
+	// change setting for showing categories
+	const onChangeSelectNewCategories = ( newValue ) => {
+		setAttributes ( { select_new_categories: newValue });
+	}
+
+
 	// initialize the default tag status
 	useEffect( () => {
 		
@@ -100,6 +118,7 @@ export default function Edit({attributes, setAttributes }) {
 		return () => {false};
 	}, []);
 
+	
 
 
 	// visibility switch for visible categories
@@ -173,7 +192,7 @@ export default function Edit({attributes, setAttributes }) {
 	return (
 		<>
 		<p { ...useBlockProps() }>
-			{tag_list}
+			{attributes.show_categories ? tag_list : ''}
 			<TextControl
 				label="Button text"
 				value={attributes.button_text}
@@ -181,6 +200,39 @@ export default function Edit({attributes, setAttributes }) {
 			/>
 		</p>
 
+		
+        <InspectorControls>
+			<PanelBody   initialOpen={ true }>
+				<PanelRow>
+					<ToggleControl
+						label="Show individual push categories"
+						onChange={ onChangeShowCategories }
+						checked={ attributes.show_categories }
+					/>
+				</PanelRow>
+			</PanelBody>
+			<PanelBody title="Future categories"  initialOpen={ true }>
+				<PanelRow>
+					<Text>What should we do when new push categories are added in the admin section?</Text>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Show new categories by default"
+						help="When new categories are added in the admin panel, should they be visible by default?"
+						onChange={ onChangeShowNewCategories }
+						checked={ attributes.show_new_categories }
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Select new categories by default"
+						help="When new categories are added in the admin panel, should they be checked by default?"
+						onChange={ onChangeSelectNewCategories }
+						checked={ attributes.select_new_categories }
+					/>
+				</PanelRow>
+			</PanelBody>
+		</InspectorControls>
 		</>
 	);
 }
