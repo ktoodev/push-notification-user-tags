@@ -5,5 +5,16 @@
  * Version: 0.1
  * Author: David Purdy, KTOO
  * Author URI: https://www.ktoo.org
- *
+ * Text Domain: push-notification-user-tags
  */
+
+ namespace PushNotificationUserTags;
+
+ 
+define (__NAMESPACE__ . '\PLUGIN_DIR', __DIR__);
+define (__NAMESPACE__ . '\PLUGIN_FILE', __FILE__);
+
+
+require_once (__DIR__ . '/includes/settings-page.php');
+require_once (__DIR__ . '/includes/meta-box.php');
+require_once (__DIR__ . '/includes/blocks.php');

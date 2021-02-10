@@ -1,0 +1,19 @@
+.repeatable-template {
+    display:none;
+}
+
+.push-tag-list {
+    max-width: 40rem;
+}
+
+.push-tag-list input {
+    width: 100%;
+}
+
+.add-push-tag.button {
+    margin-top:10px;
+}
+
+.delete-column {
+    width:80px;
+}
