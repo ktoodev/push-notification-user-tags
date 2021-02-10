@@ -4,3 +4,15 @@
  * Replace them with your own styles or remove the file completely.
  */
 
+.visibility-button {
+    vertical-align: middle;
+    height: 24px;
+}
+
+.tag_row > * {
+    display:  inline-block;
+}
+
+.tag_row.invisible {
+    opacity: 0.6;
+}

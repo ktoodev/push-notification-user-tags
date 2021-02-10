@@ -27,6 +27,7 @@ function create_block_push_tags_signup() {
 	);
 	wp_set_script_translations( 'create-block-push-tags-block-editor', 'push-notification-user-tags' );
 
+	wp_localize_script( 'create-block-push-tags-block-editor', 'push_notification_user_tags_list', \get_option('push_notification_user_tags_list') );
 
 	$editor_css = 'blocks/build/index.css';
 	wp_register_style(
@@ -49,6 +50,10 @@ function create_block_push_tags_signup() {
 		'button_text' => array (
 			'type' => 'string',
 			'default' => 'Sign up'
+		),
+		'default_tags' => array (
+			'type' => 'object',
+			'default' => array()
 		)
 	);
 
