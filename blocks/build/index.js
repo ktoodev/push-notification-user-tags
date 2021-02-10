@@ -309,8 +309,8 @@ function Edit(_ref) {
       var new_tag = {
         key: key,
         label: current_label,
-        default_selection: 0,
-        visible: 1
+        default_selection: attributes.select_new_categories,
+        visible: attributes.show_new_categories
       };
       new_tags[key] = _objectSpread(_objectSpread({}, new_tag), {}, {
         current_tag: current_tag
@@ -394,18 +394,25 @@ function Edit(_ref) {
       onChange: function onChange(newValue) {
         return onChangeTagDefault(newValue, key);
       },
-      checked: attributes.default_tags[key] && attributes.default_tags[key].default_selection
+      checked: attributes.default_tags[key] && attributes.default_tags[key].default_selection && attributes.default_tags[key].visible
     })));
   };
 
   for (var key in push_notification_user_tags_list) {
     _loop(key);
-  }
+  } // template for submit button
 
+
+  var submit_template = [['core/button', {
+    placeholder: 'Summary'
+  }]];
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), attributes.show_categories ? tag_list : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["TextControl"], {
     label: "Button text",
     value: attributes.button_text,
     onChange: onChangeButtonText
+  }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InnerBlocks"], {
+    template: submit_template,
+    templateLock: "all"
   })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
     initialOpen: true
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {

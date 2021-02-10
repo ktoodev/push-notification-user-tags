@@ -15,6 +15,8 @@ define (__NAMESPACE__ . '\PLUGIN_DIR', __DIR__);
 define (__NAMESPACE__ . '\PLUGIN_FILE', __FILE__);
 
 
-require_once (__DIR__ . '/includes/settings-page.php');
-require_once (__DIR__ . '/includes/meta-box.php');
-require_once (__DIR__ . '/includes/blocks.php');
+require_once (PLUGIN_DIR . '/includes/settings-page.php');
+require_once (PLUGIN_DIR . '/includes/meta-box.php');
+
+// blocks 
+require_once (PLUGIN_DIR . '/blocks/src/push_signup/index.php');

@@ -1,12 +1,9 @@
-<?php
- 
+<?php 
+
 namespace PushNotificationUserTags;
 
 /**
- * Registers all block assets so that they can be enqueued through the block editor
- * in the corresponding context.
- *
- * @see https://developer.wordpress.org/block-editor/tutorials/block-tutorial/applying-styles-with-stylesheets/
+ * Register the push signup block
  */
 function create_block_push_tags_signup() {
 	$dir = PLUGIN_DIR;

@@ -21,8 +21,8 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 import './editor.scss';
 
-import { InspectorControls} from '@wordpress/block-editor';
-import { Panel, PanelBody, PanelRow, ToggleControl, __experimentalText as Text, TextControl, CheckboxControl, IconButton    } from '@wordpress/components';
+import { InspectorControls, InnerBlocks} from '@wordpress/block-editor';
+import {  PanelBody, PanelRow, ToggleControl, __experimentalText as Text, TextControl, CheckboxControl, IconButton    } from '@wordpress/components';
 
 import { useEffect } from '@wordpress/element';
 
@@ -104,8 +104,8 @@ export default function Edit({attributes, setAttributes }) {
 			let new_tag = {
 				key: key,
 				label: current_label,
-				default_selection: 0,
-				visible: 1
+				default_selection: attributes.select_new_categories,
+				visible: attributes.show_new_categories
 			};
 
 			new_tags[key] = {...new_tag, current_tag};
@@ -182,12 +182,17 @@ export default function Edit({attributes, setAttributes }) {
 					label={label}
 					disabled={disabled}
 					onChange={(newValue) => onChangeTagDefault(newValue, key)}
-					checked={ attributes.default_tags[key] && attributes.default_tags[key].default_selection }
+					checked={ attributes.default_tags[key] && attributes.default_tags[key].default_selection && attributes.default_tags[key].visible }
 				/>
 			</div>
 		);
 	}
 
+
+	// template for submit button
+	const submit_template = [
+		[ 'core/button', { placeholder: 'Summary' } ],
+	];
 
 	return (
 		<>
@@ -198,6 +203,10 @@ export default function Edit({attributes, setAttributes }) {
 				value={attributes.button_text}
 				onChange={onChangeButtonText}
 			/>
+			<InnerBlocks
+                template={ submit_template }
+                templateLock="all"
+            />
 		</p>
 
 		

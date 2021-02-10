@@ -5,7 +5,18 @@
  */
 .visibility-button {
   vertical-align: middle;
-  height: 24px; }
+  height: 24px;
+  background: var(--wp-admin-theme-color);
+  margin-right: 7px; }
+
+.visibility-button svg {
+  fill: white; }
+
+.invisible .visibility-button {
+  background: none; }
+
+.invisible .visibility-button svg {
+  fill: black; }
 
 .tag_row > * {
   display: inline-block; }
