@@ -22,7 +22,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 import './editor.scss';
 
 import { InspectorControls, InnerBlocks} from '@wordpress/block-editor';
-import {  PanelBody, PanelRow, ToggleControl, __experimentalText as Text, TextControl, CheckboxControl, IconButton    } from '@wordpress/components';
+import {  PanelBody, PanelRow, ToggleControl, __experimentalText as Text, TextControl, CheckboxControl, Button, ExternalLink } from '@wordpress/components';
 
 import { useEffect } from '@wordpress/element';
 
@@ -166,7 +166,7 @@ export default function Edit({clientId, attributes, setAttributes }) {
 
 	// visibility switch for visible categories
 	let visible_icon = (tag) => {
-		return (<IconButton 
+		return (<Button 
 			className="visibility-button"
 			label="Category is visible"
 			onClick={() => onChangeVisibility(tag, 0)}
@@ -182,7 +182,7 @@ export default function Edit({clientId, attributes, setAttributes }) {
 	
 	// visibility switch for INvisible categories
 	let invisible_icon = (tag) => {
-		return (<IconButton 
+		return (<Button 
 			className="visibility-button"
 			label="Category is hidden"
 			onClick={() => onChangeVisibility(tag, 1)}
@@ -254,6 +254,9 @@ export default function Edit({clientId, attributes, setAttributes }) {
 		
         <InspectorControls>
 			<PanelBody   initialOpen={ true }>
+				<PanelRow>
+					<ExternalLink href="/wp-admin/admin.php?page=push-notification-user-tags" target="_blank">Edit push categories</ExternalLink>
+				</PanelRow>
 				<PanelRow>
 					<ToggleControl
 						label="Show individual push categories"

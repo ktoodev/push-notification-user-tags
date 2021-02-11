@@ -23,7 +23,8 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  * @return {WPElement} Element to render.
  */
 export default function save(props) {
-	console.log (props);
+
+	// don't let the button have an URL and force it to have the right class for later JS
 	if (props.innerBlocks.length) {
 		delete props.innerBlocks[0].attributes.url;
 		let old_class_name = props.innerBlocks[0].attributes.className ? props.innerBlocks[0].attributes.className : '';

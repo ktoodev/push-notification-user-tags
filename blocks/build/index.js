@@ -370,7 +370,7 @@ function Edit(_ref) {
   }, []); // visibility switch for visible categories
 
   var visible_icon = function visible_icon(tag) {
-    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["IconButton"], {
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["Button"], {
       className: "visibility-button",
       label: "Category is visible",
       onClick: function onClick() {
@@ -388,7 +388,7 @@ function Edit(_ref) {
 
 
   var invisible_icon = function invisible_icon(tag) {
-    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["IconButton"], {
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["Button"], {
       className: "visibility-button",
       label: "Category is hidden",
       onClick: function onClick() {
@@ -461,7 +461,10 @@ function Edit(_ref) {
     templateLock: "all"
   }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
     initialOpen: true
-  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ExternalLink"], {
+    href: "/wp-admin/admin.php?page=push-notification-user-tags",
+    target: "_blank"
+  }, "Edit push categories")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
     label: "Show individual push categories",
     onChange: onChangeShowCategories,
     checked: attributes.show_categories
@@ -653,8 +656,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 function save(props) {
-  console.log(props);
-
+  // don't let the button have an URL and force it to have the right class for later JS
   if (props.innerBlocks.length) {
     delete props.innerBlocks[0].attributes.url;
     var old_class_name = props.innerBlocks[0].attributes.className ? props.innerBlocks[0].attributes.className : '';
