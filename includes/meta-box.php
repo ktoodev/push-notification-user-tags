@@ -20,7 +20,7 @@ function initialize_meta_box () {
             __NAMESPACE__ . '\meta_box_content',
             $post_type,
             'side',
-            'high'
+            'low'
         );
     }
 }
@@ -39,7 +39,7 @@ function meta_box_content ($post, $args) {
     }
     ?>
 
-    <?php esc_html_e('Send a push notification to users subscribed to the following categories:', 'push-notification-user-tags'); ?>
+    <?php esc_html_e('Send a push notification to users subscribed to any of the following categories:', 'push-notification-user-tags'); ?>
 
     <?php \wp_nonce_field( 'push_tags_add_to_post', 'push_tags_admin_nonce' ); ?>
 
@@ -57,6 +57,24 @@ function meta_box_content ($post, $args) {
     </a>
 
 
+    <script>
+    jQuery( document ).ready(function( $ ) {
+        
+        // set initial state: tag checkboxes only enabled when push is enabled
+        $('.push_notification_user_tag input').prop('disabled', ! $('#send_onesignal_notification').prop('checked'));
+
+        // when push state changes, change whether tag checkboxes are disabled
+        $('#send_onesignal_notification').on('change', function (event) {
+            $('.push_notification_user_tag input').prop('disabled', !event.target.checked);
+        });
+
+
+        // move tag checkboxes into main metabox
+        $('<hr style=" margin: 12px 0; border-top: 1px solid #8e8e8e;"></hr>').appendTo('#onesignal_notif_on_post .inside');
+        $('#push_notification_user_tags .inside').contents().appendTo('#onesignal_notif_on_post .inside');
+        $('#push_notification_user_tags').hide();
+    });
+    </script>
     <?php 
 }
 
