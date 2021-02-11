@@ -63,12 +63,17 @@ function create_block_push_tags_signup() {
 		'select_new_categories' => array (
 			'type' => 'boolean',
 			'default' => false
+		),
+		'remove_deleted_categories' => array (
+			'type' => 'boolean',
+			'default' => true
 		)
 	);
 
 	register_block_type(
 		'push-notification-user-tags/push-signup',
 		array(
+            'render_callback' => __NAMESPACE__ . '\render_signup_block',
 			'attributes' => $attributes,
 			'editor_script' => 'create-block-push-tags-block-editor',
 			'editor_style'  => 'create-block-push-tags-block-editor',
@@ -77,3 +82,41 @@ function create_block_push_tags_signup() {
 	);
 }
 add_action( 'init', __NAMESPACE__ . '\create_block_push_tags_signup' );
+
+/**
+ * Render the front end of the push signup block
+ */
+function render_signup_block ($attributes, $content) {
+    
+    $all_tags = \get_option('push_notification_user_tags_list');
+    $new_tags = array_values (array_diff (array_keys ($all_tags), array_keys ($attributes['default_tags'])));
+    //$deleted_tags = array_values (array_diff (array_keys ($attributes['default_tags']), array_keys ($all_tags)));
+
+    // the tags we'll be looping through - everything from settings and the block if we're showing new tags, otherwise just the ones from the block
+    $tags_to_show = $attributes['show_new_categories'] ? array_merge ($all_tags, $attributes['default_tags']) : $attributes['default_tags'];
+
+    $output = '';
+
+    $output .= '<div class="wp-block-push-notification-signup">';
+
+    if ($attributes['show_categories']) {
+        
+        // loop through all the tags saved in the block
+        foreach ($tags_to_show as $tag) {
+            
+            // if this tag is visibible and in the settings or we're NOT removing deleted tags
+            if (isset ($tag['visible']) && $tag['visible'] && ( in_array ($tag['key'], array_keys($all_tags)) || ! $attributes['remove_deleted_categories'] ) ) {
+                $output .= '<div class="push-notification-category">';
+                $output .= '<label><input type="checkbox" value="' . $tag['key'] . '"' . ($tag['default_selection'] ? ' checked' : '') . ' />' . (!empty($tag['label']) ? $tag['label'] : $tag['key']) . '</label>';
+                $output .= '</div>';
+            }
+        }
+    }
+
+    $output .= $content;
+
+    $output .= '</div>';
+
+    return $output;
+
+}

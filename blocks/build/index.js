@@ -249,17 +249,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  */
 
 function Edit(_ref) {
-  var attributes = _ref.attributes,
+  var clientId = _ref.clientId,
+      attributes = _ref.attributes,
       setAttributes = _ref.setAttributes;
 
-  // The text of the submit button
-  var onChangeButtonText = function onChangeButtonText(newText) {
-    setAttributes({
-      button_text: newText
-    });
-  }; // default selection for a category/tag changes
-
-
+  // default selection for a category/tag changes
   var onChangeTagDefault = function onChangeTagDefault(newTagDefault, tag) {
     var newDefaultSelection = newTagDefault ? 1 : 0;
     setAttributes({
@@ -283,27 +277,37 @@ function Edit(_ref) {
     setAttributes({
       show_categories: newValue
     });
-  }; // change setting for showing categories
+  }; // change setting for automatically showing new categories
 
 
   var onChangeShowNewCategories = function onChangeShowNewCategories(newValue) {
     setAttributes({
       show_new_categories: newValue
     });
-  }; // change setting for showing categories
+  }; // change setting for automatically selecting new
 
 
   var onChangeSelectNewCategories = function onChangeSelectNewCategories(newValue) {
     setAttributes({
       select_new_categories: newValue
     });
+  }; // change setting for removing deleted categories
+
+
+  var onChangeRemoveDeletedCategories = function onChangeRemoveDeletedCategories(newValue) {
+    setAttributes({
+      remove_deleted_categories: newValue
+    });
   }; // initialize the default tag status
 
 
   Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     var new_tags = [];
+    /**
+     * Add a tag to the block attributes
+     */
 
-    for (var key in push_notification_user_tags_list) {
+    var add_tag = function add_tag(key) {
       var current_tag = attributes.default_tags[key] || {};
       var current_label = push_notification_user_tags_list[key] || '';
       var new_tag = {
@@ -312,9 +316,23 @@ function Edit(_ref) {
         default_selection: attributes.select_new_categories,
         visible: attributes.show_new_categories
       };
-      new_tags[key] = _objectSpread(_objectSpread({}, new_tag), {}, {
-        current_tag: current_tag
-      });
+      new_tags[key] = _objectSpread(_objectSpread({}, new_tag), current_tag);
+    }; // go through the tags stored in this block
+
+
+    for (var key in attributes.default_tags) {
+      // if this key is still in the settings or we're not deleting keys that aren't, add it
+      if (push_notification_user_tags_list.hasOwnProperty(key) || !attributes.remove_deleted_categories) {
+        add_tag(key);
+      }
+    } // go through the tags defined in settings
+
+
+    for (var _key in push_notification_user_tags_list) {
+      // if this isn't already in the attributes, add it
+      if (!attributes.default_tags.hasOwnProperty(_key)) {
+        add_tag(_key);
+      }
     }
 
     setAttributes({
@@ -404,16 +422,14 @@ function Edit(_ref) {
 
 
   var submit_template = [['core/button', {
-    placeholder: 'Summary'
+    text: 'Sign up'
   }]];
-  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), attributes.show_categories ? tag_list : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["TextControl"], {
-    label: "Button text",
-    value: attributes.button_text,
-    onChange: onChangeButtonText
-  }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InnerBlocks"], {
+  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), attributes.show_categories ? tag_list : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+    className: "submit-button-container"
+  }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InnerBlocks"], {
     template: submit_template,
     templateLock: "all"
-  })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
+  }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
     initialOpen: true
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
     label: "Show individual push categories",
@@ -432,6 +448,11 @@ function Edit(_ref) {
     help: "When new categories are added in the admin panel, should they be checked by default?",
     onChange: onChangeSelectNewCategories,
     checked: attributes.select_new_categories
+  })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+    label: "Automatically remove deleted categories",
+    help: "Strongly recommended: When existing categories are deleted, remove them from this block",
+    onChange: onChangeRemoveDeletedCategories,
+    checked: attributes.remove_deleted_categories
   })))));
 }
 
@@ -595,8 +616,16 @@ __webpack_require__.r(__webpack_exports__);
  * @return {WPElement} Element to render.
  */
 
-function save() {
-  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__["useBlockProps"].save(), Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Saved content!', 'push-notification-user-tags'));
+function save(props) {
+  console.log(props);
+
+  if (props.innerBlocks.length) {
+    delete props.innerBlocks[0].attributes.url;
+    var old_class_name = props.innerBlocks[0].attributes.className ? props.innerBlocks[0].attributes.className : '';
+    props.innerBlocks[0].attributes.className = old_class_name.replace('push-notification-signup').trim() + ' push-notification-signup';
+  }
+
+  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__["InnerBlocks"].Content, null);
 }
 
 /***/ }),

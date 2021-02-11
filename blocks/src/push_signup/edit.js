@@ -35,12 +35,8 @@ import { useEffect } from '@wordpress/element';
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({attributes, setAttributes }) {
+export default function Edit({clientId, attributes, setAttributes }) {
 
-	// The text of the submit button
-	const onChangeButtonText = ( newText ) => {
-		setAttributes ( {button_text: newText });
-	};
 
 	// default selection for a category/tag changes
 	const onChangeTagDefault = ( newTagDefault, tag ) => {
@@ -80,24 +76,32 @@ export default function Edit({attributes, setAttributes }) {
 	}
 
 	
-	// change setting for showing categories
+	// change setting for automatically showing new categories
 	const onChangeShowNewCategories = ( newValue ) => {
 		setAttributes ( { show_new_categories: newValue });
 	}
 
 	
-	// change setting for showing categories
+	// change setting for automatically selecting new
 	const onChangeSelectNewCategories = ( newValue ) => {
 		setAttributes ( { select_new_categories: newValue });
 	}
 
+	// change setting for removing deleted categories
+	const onChangeRemoveDeletedCategories = ( newValue ) => {
+		setAttributes ( { remove_deleted_categories: newValue });
+	};
 
 	// initialize the default tag status
 	useEffect( () => {
 		
 		let new_tags = [];
 
-		for (const key in push_notification_user_tags_list){
+		/**
+		 * Add a tag to the block attributes
+		 */
+		let add_tag = (key) => {
+			
 			let current_tag = attributes.default_tags[key] || {};
 			let current_label = push_notification_user_tags_list[key] || '';
 
@@ -107,8 +111,26 @@ export default function Edit({attributes, setAttributes }) {
 				default_selection: attributes.select_new_categories,
 				visible: attributes.show_new_categories
 			};
+			new_tags[key] = {...new_tag, ...current_tag};
+		}
 
-			new_tags[key] = {...new_tag, current_tag};
+		// go through the tags stored in this block
+		for (const key in attributes.default_tags){
+
+			// if this key is still in the settings or we're not deleting keys that aren't, add it
+			if ( push_notification_user_tags_list.hasOwnProperty(key) || ! attributes.remove_deleted_categories) {
+				add_tag (key);
+			}
+		}
+
+		// go through the tags defined in settings
+		for (const key in push_notification_user_tags_list) {
+
+			// if this isn't already in the attributes, add it
+			if ( ! attributes.default_tags.hasOwnProperty(key) ) {
+				add_tag (key);
+			}
+			
 		}
 		
 		setAttributes ( {
@@ -191,22 +213,19 @@ export default function Edit({attributes, setAttributes }) {
 
 	// template for submit button
 	const submit_template = [
-		[ 'core/button', { placeholder: 'Summary' } ],
+		[ 'core/button', { text: 'Sign up' } ],
 	];
 
 	return (
 		<>
 		<p { ...useBlockProps() }>
 			{attributes.show_categories ? tag_list : ''}
-			<TextControl
-				label="Button text"
-				value={attributes.button_text}
-				onChange={onChangeButtonText}
-			/>
-			<InnerBlocks
-                template={ submit_template }
-                templateLock="all"
-            />
+			<div className="submit-button-container">
+				<InnerBlocks
+					template={ submit_template }
+					templateLock="all"
+				/>
+			</div>
 		</p>
 
 		
@@ -238,6 +257,14 @@ export default function Edit({attributes, setAttributes }) {
 						help="When new categories are added in the admin panel, should they be checked by default?"
 						onChange={ onChangeSelectNewCategories }
 						checked={ attributes.select_new_categories }
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Automatically remove deleted categories"
+						help="Strongly recommended: When existing categories are deleted, remove them from this block"
+						onChange={ onChangeRemoveDeletedCategories }
+						checked={ attributes.remove_deleted_categories }
 					/>
 				</PanelRow>
 			</PanelBody>

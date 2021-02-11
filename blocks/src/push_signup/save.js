@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -22,13 +22,15 @@ import { useBlockProps } from '@wordpress/block-editor';
  *
  * @return {WPElement} Element to render.
  */
-export default function save() {
+export default function save(props) {
+	console.log (props);
+	if (props.innerBlocks.length) {
+		delete props.innerBlocks[0].attributes.url;
+		let old_class_name = props.innerBlocks[0].attributes.className ? props.innerBlocks[0].attributes.className : '';
+		props.innerBlocks[0].attributes.className = old_class_name.replace('push-notification-signup').trim() + ' push-notification-signup';
+	}
+
 	return (
-		<p { ...useBlockProps.save() }>
-			{ __(
-				'Saved content!',
-				'push-notification-user-tags'
-			) }
-		</p>
+			<InnerBlocks.Content />
 	);
 }

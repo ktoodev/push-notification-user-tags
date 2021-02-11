@@ -24,5 +24,14 @@
 .tag_row.invisible {
   opacity: 0.6; }
 
+/* Inner block button alignment */
+.submit-button-container .block-editor-inner-blocks .wp-block:after {
+  clear: both;
+  content: ' ';
+  display: block; }
+
+.submit-button-container .wp-block[data-align=left], .wp-block[data-align=right] {
+  height: auto; }
+
 
 /*# sourceMappingURL=index.css.map*/
