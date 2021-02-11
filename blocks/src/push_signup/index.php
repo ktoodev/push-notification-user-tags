@@ -109,7 +109,8 @@ function render_signup_block ($attributes, $content) {
             // if this tag is visibible and in the settings or we're NOT removing deleted tags
             if (isset ($tag['visible']) && $tag['visible'] && ( in_array ($tag['key'], array_keys($all_tags)) || ! $attributes['remove_deleted_categories'] ) ) {
                 $output .= '<div class="push-notification-category">';
-                $output .= '<label><input type="checkbox" value="' . $tag['key'] . '"' . ($tag['default_selection'] ? ' checked' : '') . ' />' . (!empty($tag['label']) ? $tag['label'] : $tag['key']) . '</label>';
+                $label = !empty ($all_tags[$tag['key']]) ? $all_tags[$tag['key']] : $tag['key'];
+                $output .= '<label><input type="checkbox" value="' . $tag['key'] . '"' . ($tag['default_selection'] ? ' checked' : '') . ' />' . $label . '</label>';
                 $output .= '</div>';
             }
         }
