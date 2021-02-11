@@ -4,6 +4,10 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+/* hide by default; only show with script in supported browsers */
+.wp-block-push-notification-signup.notifications-not-supported {
+  display: none; }
+
 .push-notification-category {
   padding-left: 25px;
   line-height: 1; }

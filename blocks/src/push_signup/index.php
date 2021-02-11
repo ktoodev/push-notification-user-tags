@@ -24,7 +24,14 @@ function create_block_push_tags_signup() {
 	);
 	wp_set_script_translations( 'create-block-push-tags-block-editor', 'push-notification-user-tags' );
 
-	wp_localize_script( 'create-block-push-tags-block-editor', 'push_notification_user_tags_list', \get_option('push_notification_user_tags_list') );
+	wp_localize_script( 
+        'create-block-push-tags-block-editor', 
+        'push_notification_user_tags', 
+        array (
+            'tag_list' => \get_option('push_notification_user_tags_list'), 
+            'admin_url' => \admin_url ('admin.php?page=push-notification-user-tags')
+        )
+    );
 
 	$editor_css = 'blocks/build/index.css';
 	wp_register_style(
@@ -97,11 +104,15 @@ function render_signup_block ($attributes, $content) {
 
     $output = '';
 
-    $output .= '<div class="wp-block-push-notification-signup">';
+    
+    $cat_container_id = 'category-container-' . rand(1000, 999999);
+
+    $output .= '<div data-push-category-container-id="' . $cat_container_id . '" class="wp-block-push-notification-signup notifications-not-supported">';
+
 
     if ($attributes['show_categories']) {
         
-        $output .= '<div class="wp-block-push-notification-signup__categories" style="column-count:' . $attributes['columns'] . '">';
+        $output .= '<div class="wp-block-push-notification-signup__categories" id="' . $cat_container_id . '" style="column-count:' . $attributes['columns'] . '">';
 
         // loop through all the tags saved in the block
         foreach ($tags_to_show as $tag) {
@@ -121,6 +132,9 @@ function render_signup_block ($attributes, $content) {
     $output .= $content;
 
     $output .= '</div>';
+
+    $output .= '<script type="text/javascript">let elements = document.getElementsByClassName("wp-block-push-notification-signup"); for(let i = 0; i < elements.length; i++) { elements[i].classList.remove("notifications-not-supported"); }</script>';
+    $output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'script.js" ></script>';
 
     return $output;
 

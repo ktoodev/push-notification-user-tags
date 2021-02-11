@@ -335,7 +335,7 @@ function Edit(_ref) {
 
     var add_tag = function add_tag(key) {
       var current_tag = attributes.default_tags[key] || {};
-      var current_label = push_notification_user_tags_list[key] || '';
+      var current_label = push_notification_user_tags.tag_list[key] || '';
       var new_tag = {
         key: key,
         label: current_label,
@@ -348,13 +348,13 @@ function Edit(_ref) {
 
     for (var key in attributes.default_tags) {
       // if this key is still in the settings or we're not deleting keys that aren't, add it
-      if (push_notification_user_tags_list.hasOwnProperty(key) || !attributes.remove_deleted_categories) {
+      if (push_notification_user_tags.tag_list.hasOwnProperty(key) || !attributes.remove_deleted_categories) {
         add_tag(key);
       }
     } // go through the tags defined in settings
 
 
-    for (var _key in push_notification_user_tags_list) {
+    for (var _key in push_notification_user_tags.tag_list) {
       // if this isn't already in the attributes, add it
       if (!attributes.default_tags.hasOwnProperty(_key)) {
         add_tag(_key);
@@ -414,7 +414,7 @@ function Edit(_ref) {
   var tag_list = [];
 
   var _loop = function _loop(key) {
-    var label = push_notification_user_tags_list[key]; // default the label to the key
+    var label = push_notification_user_tags.tag_list[key]; // default the label to the key
 
     if (label.length == 0) {
       label = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("em", null, key);
@@ -442,7 +442,7 @@ function Edit(_ref) {
     })));
   };
 
-  for (var key in push_notification_user_tags_list) {
+  for (var key in push_notification_user_tags.tag_list) {
     _loop(key);
   } // template for submit button
 
@@ -462,9 +462,9 @@ function Edit(_ref) {
   }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
     initialOpen: true
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ExternalLink"], {
-    href: "/wp-admin/admin.php?page=push-notification-user-tags",
+    href: push_notification_user_tags.admin_url,
     target: "_blank"
-  }, "Edit push categories")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Edit push categories'))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
     label: "Show individual push categories",
     onChange: onChangeShowCategories,
     checked: attributes.show_categories

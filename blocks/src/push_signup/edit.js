@@ -124,7 +124,7 @@ export default function Edit({clientId, attributes, setAttributes }) {
 		let add_tag = (key) => {
 			
 			let current_tag = attributes.default_tags[key] || {};
-			let current_label = push_notification_user_tags_list[key] || '';
+			let current_label = push_notification_user_tags.tag_list[key] || '';
 
 			let new_tag = {
 				key: key,
@@ -139,13 +139,13 @@ export default function Edit({clientId, attributes, setAttributes }) {
 		for (const key in attributes.default_tags){
 
 			// if this key is still in the settings or we're not deleting keys that aren't, add it
-			if ( push_notification_user_tags_list.hasOwnProperty(key) || ! attributes.remove_deleted_categories) {
+			if ( push_notification_user_tags.tag_list.hasOwnProperty(key) || ! attributes.remove_deleted_categories) {
 				add_tag (key);
 			}
 		}
 
 		// go through the tags defined in settings
-		for (const key in push_notification_user_tags_list) {
+		for (const key in push_notification_user_tags.tag_list) {
 
 			// if this isn't already in the attributes, add it
 			if ( ! attributes.default_tags.hasOwnProperty(key) ) {
@@ -198,9 +198,9 @@ export default function Edit({clientId, attributes, setAttributes }) {
 
 	// set up list of tags checkboxes
 	let tag_list = [];
-	for (const key in push_notification_user_tags_list) {
+	for (const key in push_notification_user_tags.tag_list) {
 
-		let label = push_notification_user_tags_list[key];
+		let label = push_notification_user_tags.tag_list[key];
 
 		// default the label to the key
 		if (label.length == 0) {
@@ -255,7 +255,7 @@ export default function Edit({clientId, attributes, setAttributes }) {
         <InspectorControls>
 			<PanelBody   initialOpen={ true }>
 				<PanelRow>
-					<ExternalLink href="/wp-admin/admin.php?page=push-notification-user-tags" target="_blank">Edit push categories</ExternalLink>
+					<ExternalLink href={push_notification_user_tags.admin_url} target="_blank">{__('Edit push categories')}</ExternalLink>
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl

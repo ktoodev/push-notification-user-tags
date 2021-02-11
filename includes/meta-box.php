@@ -41,6 +41,10 @@ function meta_box_content () {
         <div class="push_notification_user_tag"><label><input type="checkbox" name="push_tags_for_post[]" value="<?php echo $key; ?>" /><?php echo $label; ?></label></div>
     <?php endforeach; ?>
 
+    
+    <a href="<?php echo \admin_url ('admin.php?page=push-notification-user-tags'); ?>" target="_blank"><?php esc_html_e('Edit these categories', 'push-notification-user-tags'); ?></a>
+
+    
     <?php 
 }
 
