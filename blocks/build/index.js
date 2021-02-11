@@ -265,10 +265,19 @@ function Edit(_ref) {
 
 
   var onChangeVisibility = function onChangeVisibility(tag, visible) {
+    // build the list of new tags
+    var new_tags = _objectSpread(_objectSpread({}, attributes.default_tags), {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, tag, _objectSpread(_objectSpread({}, attributes.default_tags[tag]), {}, {
+      visible: visible
+    }))); // get the count of total visible tags in the new list
+
+
+    var visible_tags = Object.keys(new_tags).filter(function (tag) {
+      return new_tags[tag].visible;
+    }).length; // update the max columns to be no more than the visible tags
+
+    setMaxColumns(visible_tags);
     setAttributes({
-      default_tags: _objectSpread(_objectSpread({}, attributes.default_tags), {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()({}, tag, _objectSpread(_objectSpread({}, attributes.default_tags[tag]), {}, {
-        visible: visible
-      })))
+      default_tags: new_tags
     });
   }; // change setting for showing categories
 
@@ -276,6 +285,23 @@ function Edit(_ref) {
   var onChangeShowCategories = function onChangeShowCategories(newValue) {
     setAttributes({
       show_categories: newValue
+    });
+  }; // change setting for showing categories
+
+
+  var onChangeColumns = function onChangeColumns(newValue) {
+    var clampedValue = Math.min(Math.max(1, newValue), Object.keys(attributes.default_tags).filter(function (tag) {
+      return attributes.default_tags[tag].visible;
+    }).length);
+    setAttributes({
+      columns: clampedValue
+    });
+  }; // set the max columns (outside of the column control being updated)
+
+
+  var setMaxColumns = function setMaxColumns(max) {
+    setAttributes({
+      columns: Math.min(max, attributes.columns)
     });
   }; // change setting for automatically showing new categories
 
@@ -424,7 +450,11 @@ function Edit(_ref) {
   var submit_template = [['core/button', {
     text: 'Sign up'
   }]];
-  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("p", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), attributes.show_categories ? tag_list : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
+    style: {
+      columnCount: attributes.columns
+    }
+  }, attributes.show_categories ? tag_list : ''), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
     className: "submit-button-container"
   }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InnerBlocks"], {
     template: submit_template,
@@ -435,6 +465,12 @@ function Edit(_ref) {
     label: "Show individual push categories",
     onChange: onChangeShowCategories,
     checked: attributes.show_categories
+  })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["TextControl"], {
+    label: "Columns for categories:",
+    type: "number",
+    className: "column-number",
+    onChange: onChangeColumns,
+    value: attributes.columns
   }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], {
     title: "Future categories",
     initialOpen: true

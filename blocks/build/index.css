@@ -24,6 +24,9 @@
 .tag_row.invisible {
   opacity: 0.6; }
 
+.column-number .components-text-control__input {
+  max-width: 50px; }
+
 /* Inner block button alignment */
 .submit-button-container .block-editor-inner-blocks .wp-block:after {
   clear: both;

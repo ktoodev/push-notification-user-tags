@@ -58,15 +58,25 @@ export default function Edit({clientId, attributes, setAttributes }) {
 	// visibility of a tag/category changes
 	const onChangeVisibility = ( tag, visible ) => {
 
+		// build the list of new tags
+		let new_tags = {
+			...attributes.default_tags, 
+			[tag]: {
+				...attributes.default_tags[tag],
+				visible: visible
+			}
+		};
+
+		// get the count of total visible tags in the new list
+		let visible_tags = Object.keys(new_tags).filter((tag) => new_tags[tag].visible).length;
+
+		// update the max columns to be no more than the visible tags
+		setMaxColumns (visible_tags);
+
 		setAttributes ( {
-			default_tags: {
-				...attributes.default_tags, 
-				[tag]: {
-					...attributes.default_tags[tag],
-					visible: visible
-				}
-			} 
+			default_tags: new_tags
 		} );
+
 	}
 
 
@@ -74,6 +84,17 @@ export default function Edit({clientId, attributes, setAttributes }) {
 	const onChangeShowCategories = ( newValue ) => {
 		setAttributes ( { show_categories: newValue });
 	}
+
+	// change setting for showing categories
+	const onChangeColumns = ( newValue ) => {
+		let clampedValue = Math.min (Math.max(1, newValue), Object.keys(attributes.default_tags).filter((tag) => attributes.default_tags[tag].visible).length);
+		setAttributes ( { columns: clampedValue });
+	}
+
+	// set the max columns (outside of the column control being updated)
+	const setMaxColumns = ( max ) => {
+		setAttributes ( { columns: Math.min (max, attributes.columns )});
+	};
 
 	
 	// change setting for automatically showing new categories
@@ -218,15 +239,17 @@ export default function Edit({clientId, attributes, setAttributes }) {
 
 	return (
 		<>
-		<p { ...useBlockProps() }>
+		<div { ...useBlockProps() }>
+			<div style={{columnCount: attributes.columns}}>
 			{attributes.show_categories ? tag_list : ''}
+			</div>
 			<div className="submit-button-container">
 				<InnerBlocks
 					template={ submit_template }
 					templateLock="all"
 				/>
 			</div>
-		</p>
+		</div>
 
 		
         <InspectorControls>
@@ -236,6 +259,15 @@ export default function Edit({clientId, attributes, setAttributes }) {
 						label="Show individual push categories"
 						onChange={ onChangeShowCategories }
 						checked={ attributes.show_categories }
+					/>
+				</PanelRow>
+				<PanelRow>
+					<TextControl
+						label="Columns for categories:"
+						type="number"
+						className="column-number"
+						onChange={ onChangeColumns }
+						value={ attributes.columns }
 					/>
 				</PanelRow>
 			</PanelBody>

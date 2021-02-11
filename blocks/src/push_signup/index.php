@@ -44,10 +44,6 @@ function create_block_push_tags_signup() {
 
 	
 	$attributes = array (
-		'button_text' => array (
-			'type' => 'string',
-			'default' => 'Sign up'
-		),
 		'default_tags' => array (
 			'type' => 'object',
 			'default' => array()
@@ -55,6 +51,10 @@ function create_block_push_tags_signup() {
 		'show_categories' => array (
 			'type' => 'boolean',
 			'default' => true
+		),
+		'columns' => array (
+			'type' => 'integer',
+			'default' => 1
 		),
 		'show_new_categories' => array (
 			'type' => 'boolean',
@@ -101,6 +101,8 @@ function render_signup_block ($attributes, $content) {
 
     if ($attributes['show_categories']) {
         
+        $output .= '<div class="wp-block-push-notification-signup__categories" style="column-count:' . $attributes['columns'] . '">';
+
         // loop through all the tags saved in the block
         foreach ($tags_to_show as $tag) {
             
@@ -111,6 +113,8 @@ function render_signup_block ($attributes, $content) {
                 $output .= '</div>';
             }
         }
+
+        $output .= '</div>';
     }
 
     $output .= $content;

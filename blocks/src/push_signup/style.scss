@@ -4,6 +4,16 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
- .push-notification-category input {
-    margin: 5px;
+ .push-notification-category {
+    padding-left: 25px;
+    line-height: 1;
+}
+
+.wp-block-push-notification-signup__categories  {
+    column-width: 6em;
+}
+
+.push-notification-category input[type="checkbox"] {
+    margin-left: -25px;
+    width: 25px;
 }
