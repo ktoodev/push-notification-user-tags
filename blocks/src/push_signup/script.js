@@ -1,87 +1,126 @@
+/**
+ * Scripts for the signup block
+ * - Load existing categories for user
+ * - Get push permission and manage flow
+ */
+
 OneSignal.push(function() {
     
-
-    
+    // only run setup on supported browsers
     if (OneSignal.isPushNotificationsSupported()) {
-        
 
-        OneSignal.isPushNotificationsEnabled().then(function(isEnabled) {   
             
-            if (!isEnabled) {
+        /**
+         * Pre-check categories the user is already subscribed to 
+         * @param string container_class    Class for containers that have category checkboxes inside them (all checkboxes in these containers will be considered for pre-checking)   
+         * @param {key: 0|1} tags           The tags (by key) with a 1 or a 0 (pre-checked or not pre-checked)
+         */
+        OneSignal.precheck_existing_tags = function (container_class, tags) {
+            // return if no tags to pre-check
+            if (!tags) {
                 return;
             }
 
-            let elements = document.getElementsByClassName('wp-block-push-notification-signup');
-
-            // load any existing options 
+            // get all the container elements
+            let elements = document.getElementsByClassName(container_class);
+        
+            // go through all container elements
             for(let i = 0; i < elements.length; i++) {
+        
+                // get all checkboxes in the container
+                let checkboxes = elements[i].querySelectorAll('input[type="checkbox"]');
 
-                OneSignal.getTags().then(function(tags) {
-                    if (!tags) {
-                        return;
+                // if a passed tag matches the checkbox, use the passed tag value for the checkbox
+                for (let box = 0; box < checkboxes.length; box++) {
+                    if (tags.hasOwnProperty(checkboxes[box].value)) {
+                        checkboxes[box].checked = parseInt(tags[checkboxes[box].value]);
                     }
-                    let checkboxes = document.querySelectorAll('#' + elements[i].dataset.pushCategoryContainerId + ' input[type="checkbox"]');
-
-                    for (let box = 0; box < checkboxes.length; box++) {
-                        
-                        if (tags.hasOwnProperty(checkboxes[box].value)) {
-                            checkboxes[box].checked = parseInt(tags[checkboxes[box].value]);
-                        }
-                    }
-                });
+                }
             }
+        }
+        
 
+        // pre-check categories existing subscribers have signed up for
+        OneSignal.isPushNotificationsEnabled().then(function(isEnabled) {   
+            if (!isEnabled) {
+                return;
+            }
             
+            OneSignal.getTags().then(function(tags) {
+                OneSignal.precheck_existing_tags('wp-block-push-notification-signup', tags);            
+            });
         });
 
 
-        // add button event handler to submit tags when it's clicked 
+        // add button event handler to submit tags when signup buttons are clicked
         let buttons = document.querySelectorAll('.push-notification-signup .wp-block-button__link');
         for (let i =0; i < buttons.length; i++) {
 
-
+            /**
+             * Event handler for submitting events
+             * @param {*} event 
+             */
             let submit_event = function (event) {
 
+                // start the loading icon and set the loadin gmessage
                 Push_Category_Loader.start(event.target);
                 Push_Category_Loader.set_message('Click "allow" to enable notifications.');
                 
                 // find parent with container ID
                 let container = event.target;
-                while ( ! container.dataset.pushCategoryContainerId) {
+                while ( ! container.classList.contains('wp-block-push-notification-signup')) {
                     container = container.parentNode;
                 }
 
-                let checkboxes = document.querySelectorAll('#' + container.dataset.pushCategoryContainerId + ' input[type="checkbox"]');
+                // all the checkboxes we want to submit
+                let checkboxes = container.querySelectorAll('input[type="checkbox"]');
 
+                // final data to submit
                 let data = {};
 
+                // add checkbox values to data
                 for (let box = 0; box < checkboxes.length; box++) {
                     data[checkboxes[box].value] = checkboxes[box].checked ? 1 : 0;
                 }
 
-                OneSignal.sendTags(data);
+                // send tags to OneSignal
+                OneSignal.sendTags(data).then(function (tags) {
+                    // pre-check all tag checkboxes anywhere on the page (in case there are multiple signup blocks in different places)
+                    OneSignal.precheck_existing_tags('wp-block-push-notification-signup', tags);
+                });
 
-
+                // if permission takes too long, show a helpful message
                 let permission_timeout = setTimeout (function () {
-                    Push_Category_Loader.set_message("If you don't see a popup to allow notifications, try clicking the padlock to the left of the URL or look for a bell icon to the right of the URL.");
+                    Push_Category_Loader.set_message("If you don't see a popup to allow notifications, try clicking the padlock to the left of the URL or look for a notification icon (sometimes a bell or text bubble).");
                 }, 10000);
 
-               Notification.requestPermission().then(function (permission) {
+            
+                // request permissions
+                Notification.requestPermission().then(function (permission) {
+
+                    // stop the timer for permission process
                     clearTimeout(permission_timeout);
 
+                    // permission denied
                     if (permission == 'denied') {
                         Push_Category_Loader.set_result({
                             status: 0,
                             message: 'Notifications are blocked - try clicking the padlock next to the URL to allow them.'
                         });
                     }
+
+                    // permission granted
                     else if (permission == 'granted') {
+                        
+                        // new signup
                         if (Push_Category_Loader.last_status < 1) {    
                             Push_Category_Loader.set_result({
                                 status: 1,
                                 message: 'Successfully signed up for notifications'
                             });
                         }
+
+                        // existing subscription update
                         else {
                             Push_Category_Loader.set_result({
                                 status: 1,
@@ -90,6 +129,8 @@ OneSignal.push(function() {
                         }
                         OneSignal.setSubscription(true);
                     }
+
+                    // no action taken
                     else if (permission == 'default') {
                         Push_Category_Loader.set_result({
                             status: -1,
@@ -100,10 +141,11 @@ OneSignal.push(function() {
 
             };
 
-            
+            // initialize the loader on the button with the containers for the icon and message
             Push_Category_Loader.init(buttons[i], buttons[i].parentNode, buttons[i].parentNode.parentNode);
-            buttons[i].addEventListener('click', submit_event);
 
+            // handle clicks on the submit button
+            buttons[i].addEventListener('click', submit_event);
         }
     }
   });
