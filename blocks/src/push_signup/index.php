@@ -131,9 +131,15 @@ function render_signup_block ($attributes, $content) {
 
     $output .= $content;
 
+    //$output .= '<div class="permission-status">';
+    //$output .= '<div class="circle-loader" style="display:none"><div class="checkmark draw"></div><div class="block draw"></div></div>';
+    //$output .= '<div class="permission-status-message"></div>';
+    //$output .= '</div>';
+
     $output .= '</div>';
 
-    $output .= '<script type="text/javascript">let elements = document.getElementsByClassName("wp-block-push-notification-signup"); for(let i = 0; i < elements.length; i++) { elements[i].classList.remove("notifications-not-supported"); }</script>';
+    $output .= '<script type="text/javascript">var OneSignal = OneSignal || []; OneSignal.push(function() {if (OneSignal.isPushNotificationsSupported()) { let elements = document.getElementsByClassName("wp-block-push-notification-signup"); for(let i = 0; i < elements.length; i++) { elements[i].classList.remove("notifications-not-supported"); } }});</script>';
+    $output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'loader.js" ></script>';
     $output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'script.js" ></script>';
 
     return $output;
