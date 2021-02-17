@@ -59,7 +59,7 @@ class Tag_Admin_Page {
         <p><?php esc_html_e('The "key" fields here will show up as tag keys in OneSignal (the value will be 1 for users who select that category and will be 0 or will not exist for other users).', 'push-notification-user-tags'); ?>
         <p><?php esc_html_e('The "label" field from this page is only used within WordPress to identify each category - you won\'t find it in OneSignal.', 'push-notification-user-tags'); ?>
 
-        <?php $current_tags = \get_option('push_notification_user_tags_list'); ?>
+        <?php $current_tags = \get_option('push_notification_user_tags_list', array()); ?>
 
 
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -70,26 +70,37 @@ class Tag_Admin_Page {
                     <tr>
                         <th class="column-name" id="tag-key-text">Key</th>
                         <th class="column-name" id="tag-label-text">Label</th>
+                        <th class="column-name" id="tag-popup-visible">Visible in popup</th>
+                        <th class="column-name" id="tag-popup-default-checked">Checked by default in popup</th>
                         <th class="delete-column"></th>
                     </tr>
                 </thead>
                     
                 <tbody>
                     <tr class="repeatable-template">
-                        <td><input name="tags[keys][]" aria-labelledby="tag-key-text" /></td>
-                        <td><input name="tags[labels][]" aria-labelledby="tag-label-text" /></td>
+                        <td><input name="tags[keys][%row%]" aria-labelledby="tag-key-text" type="text" /></td>
+                        <td><input name="tags[labels][%row%]" aria-labelledby="tag-label-text" type="text" /></td>
+                        <td><input name="tags[visible][%row%]" aria-labelledby="tag-popup-visible" type="checkbox" value="1"  /></td>
+                        <td><input name="tags[checked][%row%]" aria-labelledby="tag-popup-default-checked" type="checkbox" value="1" /></td>
                         <td><input type="button" class="button delete" value="Delete" /></td>
                     </tr>
 
-                    <?php foreach ($current_tags as $key => $label): ?>
+                    <?php
+                    $row = 0;
+                    foreach ($current_tags as $key => $tag): ?>
                     
                     <tr>
-                        <td><input name="tags[keys][]" aria-labelledby="tag-key-text" value="<?php echo $key; ?>" /></td>
-                        <td><input name="tags[labels][]" aria-labelledby="tag-label-text" value="<?php echo $label; ?>" /></td>
+                        <td><input name="tags[keys][<?php echo $row; ?>]" aria-labelledby="tag-key-text" type="text" value="<?php echo $key; ?>" /></td>
+                        <td><input name="tags[labels][<?php echo $row; ?>]" aria-labelledby="tag-label-text" type="text" value="<?php echo $tag['label']; ?>" /></td>
+                        <td><input name="tags[visible][<?php echo $row; ?>]" aria-labelledby="tag-popup-visible" type="checkbox" value="1" <?php echo (!empty ($tag['visible']) ? ' checked' : ''); ?>/></td>
+                        <td><input name="tags[checked][<?php echo $row; ?>]" aria-labelledby="tag-popup-default-checked" type="checkbox" value="1" <?php echo (!empty ($tag['checked']) ? ' checked' : ''); ?> /></td>
                         <td><input type="button" class="button delete" value="Delete" /></td>
                     </tr>
 
-                    <?php endforeach; ?>
+                    <?php 
+                    $row++;
+                    endforeach; 
+                    ?>
                 </tbody>
             </table>
             <input type="button" class="button add-push-tag" value="Add push category" />
@@ -117,6 +128,8 @@ class Tag_Admin_Page {
      */
     function save_category_tags () {
         
+        error_log (print_r ($_POST['tags'], true));
+        
         // check user capability
         if ( ! \current_user_can( $this->capability ) ) {
 			\wp_die( \esc_html__( 'You do not have sufficient permissions to access this page.', 'push-notification-user-tags' ) );
@@ -133,20 +146,23 @@ class Tag_Admin_Page {
             // convert tags posted from form to array
             $tags = array();
             for ($tag_index = 0; $tag_index < count($_POST['tags']['labels']); $tag_index++) {
-                $label = $_POST['tags']['labels'][$tag_index];
-                $key = $_POST['tags']['keys'][$tag_index];
-
+                $tag = array();
+                $tag['label'] = isset ($_POST['tags']['labels'][$tag_index]) ? $_POST['tags']['labels'][$tag_index] : '';
+                $tag['visible'] = !empty($_POST['tags']['visible'][$tag_index]);
+                $tag['checked'] = !empty($_POST['tags']['checked'][$tag_index]);
+                
+                
+                // if the key is empty, make one from the label
+                $key = !empty ($_POST['tags']['keys'][$tag_index]) ? $_POST['tags']['keys'][$tag_index] : $tag['label'];
+                
                 // continue if nothing in this row
-                if (empty ($label) && empty ($key)) {
+                if (empty ($tag['label']) && empty ($key)) {
                     continue;
                 }
 
-                // if the key is empty, make one from the label
-                $key = !empty ($key) ? $key : $label;
+                $tag['key'] = \sanitize_title ($key);
 
-                $key = \sanitize_title ($key);
-
-                $tags[$key] = $label;
+                $tags[$key] = $tag;
             }
 
             // save tag array as option 

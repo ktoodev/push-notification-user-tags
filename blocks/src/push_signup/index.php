@@ -30,7 +30,7 @@ function create_block_push_tags_signup() {
         'create-block-push-tags-block-editor', 
         'push_notification_user_tags', 
         array (
-            'tag_list' => \get_option('push_notification_user_tags_list'), 
+            'tag_list' => \get_option('push_notification_user_tags_list', array()), 
             'admin_url' => \admin_url ('admin.php?page=push-notification-user-tags')
         )
     );
@@ -101,11 +101,16 @@ add_action( 'init', __NAMESPACE__ . '\create_block_push_tags_signup' );
 function render_signup_block ($attributes, $content) {
     
     // get all tags set in options
-    $all_tags = \get_option('push_notification_user_tags_list');
+    $all_tags = \get_option('push_notification_user_tags_list', array());
 
     // the tags we'll be looping through - from settings AND the block if we're showing new tags; otherwise JUST the ones from the block
     $tags_to_show = $attributes['show_new_categories'] ? array_merge ($all_tags, $attributes['default_tags']) : $attributes['default_tags'];
 
+	if (empty ($tags_to_show)) {
+		return '';
+	}
+
+	//var_dump ($tags_to_show);
 
     $output = '';
 
@@ -125,8 +130,8 @@ function render_signup_block ($attributes, $content) {
             if (isset ($tag['visible']) && $tag['visible'] && ( in_array ($tag['key'], array_keys($all_tags)) || ! $attributes['remove_deleted_categories'] ) ) {
                 $output .= '<div class="push-notification-category">';
 
-                $label = !empty ($all_tags[$tag['key']]) ? $all_tags[$tag['key']] : $tag['key'];
-                $output .= '<label><input type="checkbox" value="' . $tag['key'] . '"' . ($tag['default_selection'] ? ' checked' : '') . ' />' . $label . '</label>';
+                $label = !empty ($all_tags[$tag['key']]['label']) ? $all_tags[$tag['key']]['label'] : $tag['key'];
+                $output .= '<label><input type="checkbox" value="' . $tag['key'] . '"' . (!empty($tag['default_selection']) ? ' checked' : '') . ' />' . $label . '</label>';
                 
                 $output .= '</div>';
             }

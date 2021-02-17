@@ -3,10 +3,10 @@
 }
 
 .push-tag-list {
-    max-width: 40rem;
+    max-width: 60rem;
 }
 
-.push-tag-list input {
+.push-tag-list input[type="text"] {
     width: 100%;
 }
 

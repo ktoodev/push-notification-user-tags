@@ -335,7 +335,7 @@ function Edit(_ref) {
 
     var add_tag = function add_tag(key) {
       var current_tag = attributes.default_tags[key] || {};
-      var current_label = push_notification_user_tags.tag_list[key] || '';
+      var current_label = push_notification_user_tags.tag_list[key]['label'] || '';
       var new_tag = {
         key: key,
         label: current_label,
@@ -414,7 +414,7 @@ function Edit(_ref) {
   var tag_list = [];
 
   var _loop = function _loop(key) {
-    var label = push_notification_user_tags.tag_list[key]; // default the label to the key
+    var label = push_notification_user_tags.tag_list[key]['label']; // default the label to the key
 
     if (label.length == 0) {
       label = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("em", null, key);

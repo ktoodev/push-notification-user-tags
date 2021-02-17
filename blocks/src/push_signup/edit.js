@@ -124,7 +124,7 @@ export default function Edit({clientId, attributes, setAttributes }) {
 		let add_tag = (key) => {
 			
 			let current_tag = attributes.default_tags[key] || {};
-			let current_label = push_notification_user_tags.tag_list[key] || '';
+			let current_label = push_notification_user_tags.tag_list[key]['label'] || '';
 
 			let new_tag = {
 				key: key,
@@ -200,7 +200,7 @@ export default function Edit({clientId, attributes, setAttributes }) {
 	let tag_list = [];
 	for (const key in push_notification_user_tags.tag_list) {
 
-		let label = push_notification_user_tags.tag_list[key];
+		let label = push_notification_user_tags.tag_list[key]['label'];
 
 		// default the label to the key
 		if (label.length == 0) {
