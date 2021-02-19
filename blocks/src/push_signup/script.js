@@ -9,8 +9,6 @@ import './loader.js';
 window.OneSignal = window.OneSignal || [];
 
 window.OneSignal.push(function() {
-
-    console.log ('in OneSignal');
     
     // only run setup on supported browsers
     if (OneSignal.isPushNotificationsSupported()) {

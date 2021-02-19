@@ -276,8 +276,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.OneSignal = window.OneSignal || [];
 window.OneSignal.push(function () {
-  console.log('in OneSignal'); // only run setup on supported browsers
-
+  // only run setup on supported browsers
   if (OneSignal.isPushNotificationsSupported()) {
     /**
      * Pre-check categories the user is already subscribed to 
