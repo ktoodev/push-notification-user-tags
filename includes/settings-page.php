@@ -19,6 +19,15 @@ class Tag_Admin_Page {
      */
     private $capability = 'manage_options';
 
+    /**
+     * Default options for popup
+     */
+    private $popup_defaults = array(
+        'signup_content'    => "Sign up for the categories you'd like us to notify you about.",
+        'signup_button'     => 'Sign up',
+        'update_content'    => "Update the categories you'd like us to notify you about.",
+        'update_button'     => 'Update notifications'
+    );
 
     /**
      * Construct the page 
@@ -27,6 +36,7 @@ class Tag_Admin_Page {
         \add_action( 'admin_menu', array ($this, 'tag_admin_page' ), 20);
         \add_action ('admin_enqueue_scripts', array ($this, 'tag_page_scripts'));
         \add_action ('admin_post_push_notifications_save_user_tags', array ($this, 'save_category_tags'));
+        \add_action ('admin_post_push_notifications_popup_settings', array ($this, 'save_popup_settings'));
     }
 
 
@@ -54,7 +64,10 @@ class Tag_Admin_Page {
 		}
 
         ?>
-        <h1 class="test"><?php esc_html_e('Push categories', 'push-notification-user-tags'); ?></h1>
+        <h1 class="title"><?php esc_html_e('Push settings', 'push-notification-user-tags'); ?></h1>
+
+
+        <h2 class="title"><?php esc_html_e('Categories', 'push-notification-user-tags'); ?></h2>
 
         <p><?php esc_html_e('The "key" fields here will show up as tag keys in OneSignal (the value will be 1 for users who select that category and will be 0 or will not exist for other users).', 'push-notification-user-tags'); ?>
         <p><?php esc_html_e('The "label" field from this page is only used within WordPress to identify each category - you won\'t find it in OneSignal.', 'push-notification-user-tags'); ?>
@@ -105,7 +118,58 @@ class Tag_Admin_Page {
             </table>
             <input type="button" class="button add-push-tag" value="Add push category" />
             <?php \wp_nonce_field( 'push_tags_save', 'push_tags_admin_nonce' ); ?>
-            <?php \submit_button( __( 'Save tags', 'push-notification-user-tags' ), 'primary' ); ?>
+            <?php \submit_button( __( 'Save category tags', 'push-notification-user-tags' ), 'primary' ); ?>
+        </form>
+
+        
+        <h2 class="title"><?php esc_html_e('Popup settings', 'push-notification-user-tags'); ?></h2>
+
+        <?php 
+        $popup_settings = \get_option('push_notification_popup_info', $this->popup_defaults);
+        ?>
+
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+            <input type="hidden" name="action" value="push_notifications_popup_settings">
+        
+            <hr />
+            <h3 class="title"><?php esc_html_e('For new users', 'push-notification-user-tags'); ?></h3>
+
+            <div class="popup-content-editor">
+                <?php wp_editor ($popup_settings['signup_content'], 'signup_content', array ('media_buttons' => false, 'textarea_rows' => 5)); ?>
+            </div>
+
+            <table class="form-table" role="presentation">
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><label for="popup-button-signup"><?php esc_html_e('Signup button text', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="popup-button-signup" name="signup_button" value="<?php echo $popup_settings['signup_button']; ?>" /></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            
+            <hr />
+            <h3 class="title"><?php esc_html_e('For users who are already subscribed', 'push-notification-user-tags'); ?></h3>
+
+            <div class="popup-content-editor">
+                <?php wp_editor ($popup_settings['update_content'], 'update_content', array ('media_buttons' => false, 'textarea_rows' => 5)); ?>
+            </div>
+
+            
+            <table class="form-table" role="presentation">
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><label for="popup-button-update"><?php esc_html_e('Update button text', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="popup-button-update" name="update_button" value="<?php echo $popup_settings['update_button']; ?>" />
+                        <p class="description"><?php esc_html_e('Shown to already-subscribed users who are updating their options.', 'push-notification-user-tags'); ?></p></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <?php \wp_nonce_field( 'tags_save_popup_options', 'push_tags_admin_nonce' ); ?>
+            <?php \submit_button( __( 'Save popup options', 'push-notification-user-tags' ), 'primary' ); ?>
         </form>
 
         <?php 
@@ -127,9 +191,7 @@ class Tag_Admin_Page {
      * Saves push category tags
      */
     function save_category_tags () {
-        
-        error_log (print_r ($_POST['tags'], true));
-        
+                
         // check user capability
         if ( ! \current_user_can( $this->capability ) ) {
 			\wp_die( \esc_html__( 'You do not have sufficient permissions to access this page.', 'push-notification-user-tags' ) );
@@ -169,6 +231,42 @@ class Tag_Admin_Page {
             \update_option ('push_notification_user_tags_list', $tags);
         }
 
+        return \wp_safe_redirect (\admin_url ('admin.php?page=push-notification-user-tags&saved=1'));
+    }
+
+
+    /**
+     * Save popup settings
+     */
+    function save_popup_settings () {
+        
+        // check user capability
+        if ( ! \current_user_can( $this->capability ) ) {
+			\wp_die( \esc_html__( 'You do not have sufficient permissions to access this page.', 'push-notification-user-tags' ) );
+		}
+
+        // check nonce 
+        if ( ! isset( $_POST['push_tags_admin_nonce'] ) || ! \wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_POST['push_tags_admin_nonce'] ) ), 'tags_save_popup_options' ) ) { 
+			\wp_die( \esc_html__('You are not authorized to perform that action', 'push-notification-user-tags' ) );
+		}
+
+        $option = \get_option('push_notification_popup_info', $this->popup_defaults);
+
+        if (isset ($_POST['signup_content'])) {
+            $option['signup_content'] = stripslashes (\wp_kses_post($_POST['signup_content']));
+        }
+        if (isset ($_POST['signup_button'])) {
+            $option['signup_button'] = stripslashes (\wp_kses_post($_POST['signup_button']));
+        }
+        if (isset ($_POST['update_content'])) {
+            $option['update_content'] = stripslashes (\wp_kses_post($_POST['update_content']));
+        }
+        if (isset ($_POST['update_button'])) {
+            $option['update_button'] = stripslashes (\wp_kses_post($_POST['update_button']));
+        }
+
+        \update_option ('push_notification_popup_info', $option);
+        
         return \wp_safe_redirect (\admin_url ('admin.php?page=push-notification-user-tags&saved=1'));
     }
 }

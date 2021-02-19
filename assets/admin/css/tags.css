@@ -2,7 +2,7 @@
     display:none;
 }
 
-.push-tag-list {
+.push-tag-list, .popup-content-editor {
     max-width: 60rem;
 }
 
