@@ -8,7 +8,8 @@ namespace PushNotificationUserTags;
 function create_block_push_tags_signup() {
 
 	$script_asset_path = PLUGIN_DIR . "/blocks/build/index.asset.php";
-	if ( ! file_exists( $script_asset_path ) ) {
+	$push_signup_script_asset_path = PLUGIN_DIR . "/blocks/build/push_signup/script.asset.php";
+	if ( ! file_exists( $script_asset_path ) || ! file_exists($push_signup_script_asset_path)) {
 		throw new Error(
 			'You need to run `npm start` or `npm run build` for the "create-block/temp-push-setup" block first.'
 		);
@@ -53,6 +54,18 @@ function create_block_push_tags_signup() {
 		filemtime( PLUGIN_DIR . "/$style_css" )
 	);
 
+	
+    // register main (front end) script
+	$script_js     = 'blocks/build/push_signup/script.js';
+	$push_signup_script_asset = require( $push_signup_script_asset_path );
+	wp_register_script(
+		'push-signup-script',
+		plugins_url( $script_js, PLUGIN_FILE ),
+		$push_signup_script_asset['dependencies'],
+		$push_signup_script_asset['version']
+	);
+	
+
 	// register block attributes
 	$attributes = array (
 		'default_tags' => array (
@@ -90,6 +103,7 @@ function create_block_push_tags_signup() {
 			'editor_script' => 'create-block-push-tags-block-editor',
 			'editor_style'  => 'create-block-push-tags-block-editor',
 			'style'         => 'create-block-temp-push-setup-block',
+			'script'		=> 'push-signup-script',
 		)
 	);
 }
@@ -110,12 +124,10 @@ function render_signup_block ($attributes, $content) {
 		return '';
 	}
 
-	//var_dump ($tags_to_show);
-
     $output = '';
 
     // wrappera round the whole block
-    $output .= '<div class="wp-block-push-notification-signup notifications-not-supported">';
+    $output .= '<div class="wp-block-push-notification-signup timeout-status notifications-not-supported">';
 
     // build the list of categories
     if ($attributes['show_categories']) {
@@ -147,8 +159,8 @@ function render_signup_block ($attributes, $content) {
 
     // scripts
     $output .= '<script type="text/javascript">var OneSignal = OneSignal || []; OneSignal.push(function() {if (OneSignal.isPushNotificationsSupported()) { let elements = document.getElementsByClassName("wp-block-push-notification-signup"); for(let i = 0; i < elements.length; i++) { elements[i].classList.remove("notifications-not-supported"); } }});</script>';
-    $output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'loader.js" ></script>';
-    $output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'script.js" ></script>';
+    //$output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'loader.js" ></script>';
+    //$output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'script.js" ></script>';
 
     return $output;
 

@@ -1,4 +1,4 @@
-(window["webpackJsonp_temp_push_setup"] = window["webpackJsonp_temp_push_setup"] || []).push([["style-index"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["style-index"],{
 
 /***/ "./blocks/src/push_signup/style.scss":
 /*!*******************************************!*\
@@ -154,7 +154,7 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
-/******/ 	var jsonpArray = window["webpackJsonp_temp_push_setup"] = window["webpackJsonp_temp_push_setup"] || [];
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
 /******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();

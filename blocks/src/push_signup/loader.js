@@ -1,4 +1,4 @@
-var Push_Category_Loader = Push_Category_Loader || {
+window.Push_Category_Loader = window.Push_Category_Loader || {
 
     /**
      * The markup for icons
@@ -121,14 +121,14 @@ var Push_Category_Loader = Push_Category_Loader || {
             }
         }
 
-        this.timeout = setTimeout (this.hide_all, 5000);
+        this.timeout = setTimeout (this.hide_all, 8000);
 
         this.in_progress = [];
     },
 
 
     hide_all: function () {
-        let everything = document.querySelectorAll('.permission-status');
+        let everything = document.querySelectorAll('.timeout-status .permission-status');
         for (let i = 0; i < everything.length; i++) {
             everything[i].style.transition = 'opacity 1s';
             everything[i].style.opacity = 0;

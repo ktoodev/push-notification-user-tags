@@ -4,7 +4,13 @@
  * - Get push permission and manage flow
  */
 
-OneSignal.push(function() {
+import './loader.js';
+
+window.OneSignal = window.OneSignal || [];
+
+window.OneSignal.push(function() {
+
+    console.log ('in OneSignal');
     
     // only run setup on supported browsers
     if (OneSignal.isPushNotificationsSupported()) {
@@ -127,7 +133,15 @@ OneSignal.push(function() {
                                 message: 'Subscription updated'
                             });
                         }
-                        OneSignal.setSubscription(true);
+
+                        // set the subscription to false if no category tags were selected, true if any were
+                        let any_tag_subscribed = false;
+                        for (const tag_checkbox in data) {
+                            if (data[tag_checkbox] != 0) {
+                                any_tag_subscribed = true;
+                            }
+                        }
+                        OneSignal.setSubscription(any_tag_subscribed);
                     }
 
                     // no action taken
