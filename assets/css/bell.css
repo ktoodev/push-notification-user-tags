@@ -64,3 +64,7 @@
 .notification-bell-icon-img .icon-foreground {
     fill:white;
 }
+
+.notification-description {
+    margin-bottom: 25px;
+}

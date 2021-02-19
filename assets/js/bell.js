@@ -1,11 +1,32 @@
 OneSignal.push(function() {
 
-    // add a class to the bell to allow separate styling for users who are already subscribed
-    OneSignal.isPushNotificationsEnabled().then(function(isEnabled) {
+
+    // make updates for already-subscribed users
+    let update_subscribed = function(isEnabled) {
+        console.log ('update subscribed');
         if (isEnabled) {
             document.querySelector('.notification-icon').classList.add('is-subscribed'); 
+
+            // if we have a different description for already-subscribed users, replace it
+            if (push_notification_popup_options && push_notification_popup_options.update_content) {
+                document.querySelector ('.wp-block-push-notification-signup.popup .notification-description').innerHTML = push_notification_popup_options.update_content;
+            }
+
+            // if we have a different button label for already-subscribed users, replace it
+            if (push_notification_popup_options && push_notification_popup_options.update_button) {
+                document.querySelector ('.wp-block-push-notification-signup.popup .push-notification-signup .wp-block-button__link').innerHTML = push_notification_popup_options.update_button;
+            }
+            
         }
+    };
+    
+    OneSignal.on('subscriptionChange', function (isSubscribed) {
+        console.log("The user's subscription state is now:", isSubscribed);
+        update_subscribed (isSubscribed);
     });
+
+    // add a class to the bell to allow separate styling for users who are already subscribed
+    OneSignal.isPushNotificationsEnabled().then(update_subscribed);
 
 
     // open the modal on a click to the bell 
