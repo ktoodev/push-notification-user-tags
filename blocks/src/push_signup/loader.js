@@ -82,7 +82,7 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
      */
     start: function (source_element) {
         // hide everything (to take care of existing messages)
-        this.hide_all();
+        this.hide_timeouts();
 
         // set the notification ID as 'in progress'
         this.in_progress.push (source_element.dataset.notificationLoaderId);
@@ -121,17 +121,25 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
             }
         }
 
-        this.timeout = setTimeout (this.hide_all, 8000);
+        this.timeout = setTimeout (this.hide_timeouts, 8000);
 
         this.in_progress = [];
     },
 
 
+    hide_timeouts () {
+        this.hide_elements (document.querySelectorAll('.timeout-status .permission-status'));
+    },
+    
+
     hide_all: function () {
-        let everything = document.querySelectorAll('.timeout-status .permission-status');
-        for (let i = 0; i < everything.length; i++) {
-            everything[i].style.transition = 'opacity 1s';
-            everything[i].style.opacity = 0;
+        this.hide_elements (document.querySelectorAll('.permission-status'));
+    },
+
+    hide_elements (elements) {
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].style.transition = 'opacity 1s';
+            elements[i].style.opacity = 0;
         }
     },
 

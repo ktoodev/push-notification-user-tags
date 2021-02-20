@@ -37,6 +37,7 @@ OneSignal.push(function() {
 
     // open the modal on a click to the bell 
     document.getElementsByClassName('notification-icon')[0].addEventListener ('click', function () {
+        Push_Category_Loader.hide_all();
         document.querySelector('.notification-background-wrapper.signup-hidden').classList.remove('signup-hidden');
     });
 
