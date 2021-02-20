@@ -28,6 +28,14 @@ class Tag_Admin_Page {
         'update_content'    => "Update the categories you'd like us to notify you about.",
         'update_button'     => 'Update notifications'
     );
+    
+    /**
+     * Default options for popup
+     */
+    private $icon_defaults = array(
+        'unsubscribed_tooltip'  => "Sign up for notifications",
+        'subscribed_tooltip'    => "Update notification options",
+    );
 
     /**
      * Construct the page 
@@ -37,6 +45,7 @@ class Tag_Admin_Page {
         \add_action ('admin_enqueue_scripts', array ($this, 'tag_page_scripts'));
         \add_action ('admin_post_push_notifications_save_user_tags', array ($this, 'save_category_tags'));
         \add_action ('admin_post_push_notifications_popup_settings', array ($this, 'save_popup_settings'));
+        \add_action ('admin_post_push_notifications_icon_settings', array ($this, 'save_icon_settings'));
     }
 
 
@@ -124,9 +133,7 @@ class Tag_Admin_Page {
         
         <h2 class="title"><?php esc_html_e('Popup settings', 'push-notification-user-tags'); ?></h2>
 
-        <?php 
-        $popup_settings = \get_option('push_notification_popup_info', $this->popup_defaults);
-        ?>
+        <?php $popup_settings = \get_option('push_notification_popup_info', $this->popup_defaults); ?>
 
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <input type="hidden" name="action" value="push_notifications_popup_settings">
@@ -172,6 +179,35 @@ class Tag_Admin_Page {
             <?php \submit_button( __( 'Save popup options', 'push-notification-user-tags' ), 'primary' ); ?>
         </form>
 
+
+
+        <h2 class="title"><?php esc_html_e('Notification icon settings', 'push-notification-user-tags'); ?></h2>
+
+        <?php $icon_settings = \get_option('push_notification_icon_settings', $this->icon_defaults); ?>
+        
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+            <input type="hidden" name="action" value="push_notifications_icon_settings">
+
+            <table class="form-table" role="presentation">
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><label for="unsubscribed_tooltip"><?php esc_html_e('Tooltip for unsubscribed users', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="unsubscribed_tooltip" name="unsubscribed_tooltip" value="<?php echo $icon_settings['unsubscribed_tooltip']; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="subscribed_tooltip"><?php esc_html_e('Tooltip for subscribed users', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="subscribed_tooltip" name="subscribed_tooltip" value="<?php echo $icon_settings['subscribed_tooltip']; ?>" /></td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            
+            <?php \wp_nonce_field( 'tags_save_icon_options', 'push_tags_admin_nonce' ); ?>
+            <?php \submit_button( __( 'Save icon options', 'push-notification-user-tags' ), 'primary' ); ?>
+
+        </form>
         <?php 
     }
 
@@ -250,7 +286,7 @@ class Tag_Admin_Page {
 			\wp_die( \esc_html__('You are not authorized to perform that action', 'push-notification-user-tags' ) );
 		}
 
-        $option = \get_option('push_notification_popup_info', $this->popup_defaults);
+        $option = \get_option('push_notification_icon_settings', $this->icon_defaults);
 
         if (isset ($_POST['signup_content'])) {
             $option['signup_content'] = stripslashes (\wp_kses_post($_POST['signup_content']));
@@ -266,6 +302,36 @@ class Tag_Admin_Page {
         }
 
         \update_option ('push_notification_popup_info', $option);
+        
+        return \wp_safe_redirect (\admin_url ('admin.php?page=push-notification-user-tags&saved=1'));
+    }
+
+
+    /**
+     * Save popup settings
+     */
+    function save_icon_settings () {
+        
+        // check user capability
+        if ( ! \current_user_can( $this->capability ) ) {
+			\wp_die( \esc_html__( 'You do not have sufficient permissions to access this page.', 'push-notification-user-tags' ) );
+		}
+
+        // check nonce 
+        if ( ! isset( $_POST['push_tags_admin_nonce'] ) || ! \wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_POST['push_tags_admin_nonce'] ) ), 'tags_save_icon_options' ) ) { 
+			\wp_die( \esc_html__('You are not authorized to perform that action', 'push-notification-user-tags' ) );
+		}
+
+        $option = \get_option('push_notification_icon_settings', $this->popup_defaults);
+
+        if (isset ($_POST['subscribed_tooltip'])) {
+            $option['subscribed_tooltip'] = sanitize_text_field($_POST['subscribed_tooltip']);
+        }
+        if (isset ($_POST['unsubscribed_tooltip'])) {
+            $option['unsubscribed_tooltip'] = sanitize_text_field($_POST['unsubscribed_tooltip']);
+        }
+
+        \update_option ('push_notification_icon_settings', $option);
         
         return \wp_safe_redirect (\admin_url ('admin.php?page=push-notification-user-tags&saved=1'));
     }

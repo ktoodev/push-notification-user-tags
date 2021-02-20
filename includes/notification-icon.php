@@ -46,7 +46,12 @@ function add_notification_bell() {
             $svg_contents = preg_replace ('/(<svg[^>]*\sclass\s*=)([\'"]?)((.(?!\2))*.)\2([^>]*>)/im', '$1"$3 notification-bell" $5', $svg_contents);
         }
 
-        echo '<div class="notification-icon">' . $svg_contents . '</div>';
+        $icon_options = \get_option('push_notification_icon_settings', array());
+
+        $subscribed_tooltip = !empty ($icon_options['subscribed_tooltip']) ? '<div class="notification-icon_tooltip notification-icon_subscribed-tooltip">' . $icon_options['subscribed_tooltip'] . '</div>' : '';
+        $unsubscribed_tooltip = !empty ($icon_options['unsubscribed_tooltip']) ? '<div class="notification-icon_tooltip notification-icon_unsubscribed-tooltip">' . $icon_options['unsubscribed_tooltip'] . '</div>' : '';
+
+        echo '<div class="notification-icon is-not-subscribed">' . $svg_contents . $subscribed_tooltip . $unsubscribed_tooltip . '</div>';
     }
 
 
@@ -102,6 +107,15 @@ function enqueue_notification_bell() {
         'notification-bell', 
         'push_notification_popup_options', 
         $popup_options
+    );
+    
+    $icon_options = \get_option('push_notification_icon_settings', array());
+
+    // localize icon options 
+	wp_localize_script( 
+        'notification-bell', 
+        'push_notification_icon_settings', 
+        $icon_options
     );
 }
 \add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_notification_bell' );

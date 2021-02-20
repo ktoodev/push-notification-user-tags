@@ -5,7 +5,8 @@ OneSignal.push(function() {
     let update_subscribed = function(isEnabled) {
         console.log ('update subscribed');
         if (isEnabled) {
-            document.querySelector('.notification-icon').classList.add('is-subscribed'); 
+            document.querySelector('.notification-icon').classList.remove('is-not-subscribed'); 
+            document.querySelector('.notification-icon').classList.add('is-subscribed');
 
             // if we have a different description for already-subscribed users, replace it
             if (push_notification_popup_options && push_notification_popup_options.update_content) {
@@ -24,8 +25,14 @@ OneSignal.push(function() {
         update_subscribed (isSubscribed);
     });
 
-    // add a class to the bell to allow separate styling for users who are already subscribed
-    OneSignal.isPushNotificationsEnabled().then(update_subscribed);
+
+    if (OneSignal.isPushNotificationsSupported()) {
+        OneSignal.isPushNotificationsEnabled().then(function (isEnabled) {
+            update_subscribed(isEnabled);
+
+            document.querySelector('.notification-icon').classList.add('is-supported');
+        });
+    }
 
 
     // open the modal on a click to the bell 
