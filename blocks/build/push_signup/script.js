@@ -211,17 +211,17 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
     this.timeout = setTimeout(this.hide_timeouts, 8000);
     this.in_progress = [];
   },
-  hide_timeouts: function hide_timeouts() {
-    this.hide_elements(document.querySelectorAll('.timeout-status .permission-status'));
-  },
-  hide_all: function hide_all() {
-    this.hide_elements(document.querySelectorAll('.permission-status'));
-  },
   hide_elements: function hide_elements(elements) {
     for (var i = 0; i < elements.length; i++) {
       elements[i].style.transition = 'opacity 1s';
       elements[i].style.opacity = 0;
     }
+  },
+  hide_timeouts: function hide_timeouts() {
+    this.hide_elements(document.querySelectorAll('.timeout-status .permission-status'));
+  },
+  hide_all: function hide_all() {
+    this.hide_elements(document.querySelectorAll('.permission-status'));
   },
 
   /**

@@ -127,6 +127,13 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
     },
 
 
+    hide_elements: function (elements) {
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].style.transition = 'opacity 1s';
+            elements[i].style.opacity = 0;
+        }
+    },
+
     hide_timeouts () {
         this.hide_elements (document.querySelectorAll('.timeout-status .permission-status'));
     },
@@ -136,12 +143,6 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
         this.hide_elements (document.querySelectorAll('.permission-status'));
     },
 
-    hide_elements (elements) {
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].style.transition = 'opacity 1s';
-            elements[i].style.opacity = 0;
-        }
-    },
 
 
     /**
