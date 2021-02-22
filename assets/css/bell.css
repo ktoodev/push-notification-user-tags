@@ -94,3 +94,13 @@
 .is-not-subscribed .notification-icon_subscribed-tooltip {
     display: none;
 }
+
+.cancel-popup.exit-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: none;
+    color: darkgray;
+    padding: 15px;
+    font-size: 20pt;
+}

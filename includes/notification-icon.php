@@ -60,10 +60,11 @@ function add_notification_bell() {
     $popup_options = \get_option('push_notification_popup_info', array());
 
     $output = '';
-    $output .= '<div class="notification-background-wrapper signup-hidden new-user">';
-    $output .= '<div class="wp-block-push-notification-signup popup">';
+    $output .= '<div class="notification-background-wrapper signup-hidden">';
+    $output .= '<div class="wp-block-push-notification-signup popup" role="dialog"  aria-labelledby="notification-description" aria-modal="true">';
+    $output .= '<button class="cancel-popup exit-button" aria-label="close">&#x1F5D9</button>';
 
-    $output .= !empty ($popup_options['signup_content']) ? '<div class="notification-description signup">' . $popup_options['signup_content'] . '</div>' : '';
+    $output .= !empty ($popup_options['signup_content']) ? '<div class="notification-description signup" id="notification-description">' . $popup_options['signup_content'] . '</div>' : '';
 
     if (is_array ($current_tags) && !empty ($current_tags)) {
         $output .= '<div class="wp-block-push-notification-signup__categories" style="column-count:2">';
