@@ -1,6 +1,6 @@
 .notification-icon {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     bottom: 10px;
     position: fixed;
     cursor: pointer;
@@ -57,7 +57,7 @@
 }
 
 
-.notification-description {
+.notification-description, .wp-block-push-notification-signup__categories {
     margin-bottom: 25px;
 }
 
