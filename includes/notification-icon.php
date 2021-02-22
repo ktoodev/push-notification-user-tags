@@ -119,3 +119,57 @@ function enqueue_notification_bell() {
     );
 }
 \add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_notification_bell' );
+
+/**
+ * Header CSS for configurable style options
+ */
+function icon_options_head_styles () {
+    $options = \get_option('push_notification_icon_settings', Tag_Admin_Page::$icon_defaults);
+    $options = array_merge (Tag_Admin_Page::$icon_defaults, $options);
+    ?>
+<style>
+.notification-bell-icon-img .icon-background {
+    fill:<?php echo $options['icon_background']; ?>;
+}
+
+.notification-bell-icon-img .icon-foreground {
+    fill:<?php echo $options['icon_foreground']; ?>;
+}
+.notification-icon_tooltip {
+    background:<?php echo $options['tooltip_background']; ?>;
+    color: <?php echo $options['tooltip_text_color']; ?>;
+    border: 1px solid <?php echo $options['tooltip_border_color']; ?>;
+}
+
+
+<?php if ($options['icon_align'] == 'bottom-left'): ?>
+
+    .notification-icon_tooltip {
+        position: absolute;
+        left: 80%;
+        top: 50%;
+        transform-origin: left center;
+        padding: 6px 10px 6px 16px;
+    }
+    .notification-icon {
+        left: 10px;
+    }
+
+<?php elseif ($options['icon_align'] == 'bottom-right'): ?>
+
+    .notification-icon_tooltip {
+        right: 80%;
+        transform-origin: right center;
+        padding: 6px 16px 6px 10px;
+    }
+    .notification-icon {
+        right: 10px;
+    }
+
+<?php endif; ?>
+
+
+</style>
+    <?php 
+}
+\add_action( 'wp_head', __NAMESPACE__ . '\icon_options_head_styles' );

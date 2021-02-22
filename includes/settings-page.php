@@ -22,7 +22,7 @@ class Tag_Admin_Page {
     /**
      * Default options for popup
      */
-    private $popup_defaults = array(
+    public static $popup_defaults = array(
         'signup_content'    => "Sign up for the categories you'd like us to notify you about.",
         'signup_button'     => 'Sign up',
         'update_content'    => "Update the categories you'd like us to notify you about.",
@@ -32,9 +32,15 @@ class Tag_Admin_Page {
     /**
      * Default options for popup
      */
-    private $icon_defaults = array(
+    public static $icon_defaults = array(
         'unsubscribed_tooltip'  => "Sign up for notifications",
         'subscribed_tooltip'    => "Update notification options",
+        'icon_background'       => "#999999",
+        'icon_foreground'       => 'white',
+        'tooltip_background'    => '#333333',
+        'tooltip_text_color'    => 'white',
+        'tooltip_border_color'  => 'white',
+        'icon_align'            => 'bottom-left',
     );
 
     /**
@@ -133,7 +139,7 @@ class Tag_Admin_Page {
         
         <h2 class="title"><?php esc_html_e('Popup settings', 'push-notification-user-tags'); ?></h2>
 
-        <?php $popup_settings = \get_option('push_notification_popup_info', $this->popup_defaults); ?>
+        <?php $popup_settings = \get_option('push_notification_popup_info', self::$popup_defaults); ?>
 
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <input type="hidden" name="action" value="push_notifications_popup_settings">
@@ -183,7 +189,7 @@ class Tag_Admin_Page {
 
         <h2 class="title"><?php esc_html_e('Notification icon settings', 'push-notification-user-tags'); ?></h2>
 
-        <?php $icon_settings = \get_option('push_notification_icon_settings', $this->icon_defaults); ?>
+        <?php $icon_settings = \get_option('push_notification_icon_settings', self::$icon_defaults); ?>
         
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <input type="hidden" name="action" value="push_notifications_icon_settings">
@@ -193,11 +199,40 @@ class Tag_Admin_Page {
                 <tbody>
                     <tr>
                         <th scope="row"><label for="unsubscribed_tooltip"><?php esc_html_e('Tooltip for unsubscribed users', 'push-notification-user-tags'); ?></label></th>
-                        <td><input type="text" id="unsubscribed_tooltip" name="unsubscribed_tooltip" value="<?php echo $icon_settings['unsubscribed_tooltip']; ?>" /></td>
+                        <td><input type="text" id="unsubscribed_tooltip" name="unsubscribed_tooltip" value="<?php echo $icon_settings['unsubscribed_tooltip'] ?? ''; ?>" /></td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="subscribed_tooltip"><?php esc_html_e('Tooltip for subscribed users', 'push-notification-user-tags'); ?></label></th>
-                        <td><input type="text" id="subscribed_tooltip" name="subscribed_tooltip" value="<?php echo $icon_settings['subscribed_tooltip']; ?>" /></td>
+                        <td><input type="text" id="subscribed_tooltip" name="subscribed_tooltip" value="<?php echo $icon_settings['subscribed_tooltip'] ?? ''; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="icon_background"><?php esc_html_e('Icon background color', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="icon_background" name="icon_background" value="<?php echo $icon_settings['icon_background'] ?? ''; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="icon_foreground"><?php esc_html_e('Icon foreground color', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="icon_foreground" name="icon_foreground" value="<?php echo $icon_settings['icon_foreground'] ?? ''; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="tooltip_background"><?php esc_html_e('Tooltip background color', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="tooltip_background" name="tooltip_background" value="<?php echo $icon_settings['tooltip_background'] ?? ''; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="tooltip_border_color"><?php esc_html_e('Tooltip border color', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="tooltip_border_color" name="tooltip_border_color" value="<?php echo $icon_settings['tooltip_border_color'] ?? ''; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="tooltip_text_color"><?php esc_html_e('Tooltip text color', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="text" id="tooltip_text_color" name="tooltip_text_color" value="<?php echo $icon_settings['tooltip_text_color'] ?? ''; ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Icon alignment', 'push-notification-user-tags'); ?></th>
+                        <td>
+                            <input type="radio" id="icon_align_bottom_left" name="icon_align" value="bottom-left" <?php echo (isset ($icon_settings['icon_align']) &&$icon_settings['icon_align'] == 'bottom-left' ? 'checked' : ''); ?> />
+                            <label for="icon_align_bottom_left" style="margin-right:30px;">Bottom left</label>
+                            <input type="radio" id="icon_align_bottom_right" name="icon_align" value="bottom-right" <?php echo (isset ($icon_settings['icon_align']) &&$icon_settings['icon_align'] == 'bottom-right' ? 'checked' : ''); ?> />
+                            <label for="icon_align_bottom_right">Bottom right</label>
+                        </td>
                     </tr>
                 </tbody>
 
@@ -286,7 +321,7 @@ class Tag_Admin_Page {
 			\wp_die( \esc_html__('You are not authorized to perform that action', 'push-notification-user-tags' ) );
 		}
 
-        $option = \get_option('push_notification_icon_settings', $this->icon_defaults);
+        $option = \get_option('push_notification_icon_settings', self::$icon_defaults);
 
         if (isset ($_POST['signup_content'])) {
             $option['signup_content'] = stripslashes (\wp_kses_post($_POST['signup_content']));
@@ -322,13 +357,12 @@ class Tag_Admin_Page {
 			\wp_die( \esc_html__('You are not authorized to perform that action', 'push-notification-user-tags' ) );
 		}
 
-        $option = \get_option('push_notification_icon_settings', $this->popup_defaults);
+        $option = \get_option('push_notification_icon_settings', self::$popup_defaults);
 
-        if (isset ($_POST['subscribed_tooltip'])) {
-            $option['subscribed_tooltip'] = sanitize_text_field($_POST['subscribed_tooltip']);
-        }
-        if (isset ($_POST['unsubscribed_tooltip'])) {
-            $option['unsubscribed_tooltip'] = sanitize_text_field($_POST['unsubscribed_tooltip']);
+        foreach (array_keys (self::$icon_defaults) as $field) {
+            if (isset ($_POST[$field])) {
+                $option[$field] = sanitize_text_field($_POST[$field]);
+            }
         }
 
         \update_option ('push_notification_icon_settings', $option);

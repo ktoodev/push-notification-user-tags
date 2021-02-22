@@ -18,6 +18,6 @@
     width:80px;
 }
 
-.onesignal-push_page_push-notification-user-tags input[type='text'] {
+.onesignal-push_page_push-notification-user-tags .form-table input[type='text'] {
     min-width:30em; 
 }
