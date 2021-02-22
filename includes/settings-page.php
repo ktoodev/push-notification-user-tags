@@ -293,7 +293,7 @@ class Tag_Admin_Page {
                     continue;
                 }
 
-                $tag['key'] = \sanitize_title ($key);
+                $tag['key'] = $key = \sanitize_title ($key);
 
                 $tags[$key] = $tag;
             }
