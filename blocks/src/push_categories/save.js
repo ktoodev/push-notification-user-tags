@@ -24,25 +24,7 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  */
 export default function save(props) {
 
-	// don't let the button have an URL and force it to have the right class for later JS
-	if (props.innerBlocks.length) {
-
-		// delete URL
-		delete props.innerBlocks[2].attributes.url;
-
-		// add the class name for submission script
-		let old_class_name = props.innerBlocks[2].attributes.className ? props.innerBlocks[2].attributes.className : '';
-		
-		let new_class_name = '';
-		if (old_class_name) {
-			new_class_name += old_class_name.replace('push-notification-signup').trim() + ' ';
-		}
-		new_class_name += 'push-notification-signup';
-
-		props.innerBlocks[2].attributes.className = new_class_name;
-	}
-
 	return (
-			<InnerBlocks.Content />
+		<InnerBlocks.Content />
 	);
 }

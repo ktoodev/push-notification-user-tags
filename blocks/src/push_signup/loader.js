@@ -134,7 +134,7 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
         }
     },
 
-    hide_timeouts () {
+    hide_timeouts: function () {
         this.hide_elements (document.querySelectorAll('.timeout-status .permission-status'));
     },
     

@@ -21,4 +21,5 @@ require_once (PLUGIN_DIR . '/includes/notification-icon.php');
 
 // blocks 
 require_once (PLUGIN_DIR . '/blocks/src/push_signup/index.php');
+require_once (PLUGIN_DIR . '/blocks/src/push_categories/index.php');
 
