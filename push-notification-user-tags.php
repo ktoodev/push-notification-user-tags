@@ -23,3 +23,26 @@ require_once (PLUGIN_DIR . '/includes/notification-icon.php');
 require_once (PLUGIN_DIR . '/blocks/src/push_signup/index.php');
 require_once (PLUGIN_DIR . '/blocks/src/push_categories/index.php');
 
+
+// make sure the main OneSignal plugin is active
+if( ! \is_plugin_active( 'onesignal-free-web-push-notifications/onesignal.php' ) ) {
+    
+    // Deactivate this plugin
+    deactivate_plugins( plugin_basename( PLUGIN_FILE ) );
+
+    // show an admin error
+    add_action( 'admin_notices', function() {
+        ?>
+        <div class="updated error">
+            <p>
+                <?php
+                _e( 'Push Notification User Tags has been deactivated because it requires The OneSignal plugin to be active', 'push-notification-user-tags' );
+                ?>
+            </p>
+        </div>
+        <?php
+        if ( isset( $_GET['activate'] ) ) {
+            unset( $_GET['activate'] );
+        }
+    } );
+}
