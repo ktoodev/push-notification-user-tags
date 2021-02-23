@@ -2,11 +2,12 @@
 
 Works with OneSignal to allow site visitors to choose specific categories of notifications to get when they sign up for push notifications by adding data tags on signup. 
 
-## Features 
+## Setup 
 
 Push Notification User Tags extends the [OneSignal plugin](https://wordpress.org/plugins/onesignal-free-web-push-notifications/) to add an interface for site visitors to choose their notification categories and an admin interface to choose which categories should receive push notifications for any given post publish/update. 
 
 This plugin adds a new settings page under the OneSignal plugin.
+
 ![The WordPress dashboard side menu showing "OneSignal Push" with "Push Categories" underneath it](https://docs.ktoo.media/wp-content/uploads/2021/02/OneSignal-submenu.png)
 
 This section includes settings for letting users select notification categories to subscribe to.
@@ -55,6 +56,13 @@ This plugin includes a "Push notification signups" block to create a signup form
 - Select the signup button for all the settings normally available for buttons (please note that links will have no effect since this button just submits the categories above).
 - The "subscribed user button text" field will replace the text shown on the button for users who are currently subscribed. 
 
+## Pushing posts 
+
+In addition to the push controls meta box added by the OneSignal WordPress plugin, this plugin adds a list of categories.
+
+![A list of categories added after the OneSignal checkboxes](https://docs.ktoo.media/wp-content/uploads/2021/02/Push-notification-post-metabox.png)
+
+These checkboxes are only enabled when the OneSignal "Send notification on post publish/update" is selected. The post will be pushed to all users who have signed up for any of the categories selected when the post is published/updated.  
 
 
 ## Development
