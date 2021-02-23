@@ -7,7 +7,7 @@ namespace PushNotificationUserTags;
  */
 function push_tags_categories() {
 
-	$script_asset_path = PLUGIN_DIR . "/blocks/build/index.asset.php";
+	$script_asset_path = PLUGIN_DIR . "/blocks/build/push_categories/index.asset.php";
 	if ( ! file_exists( $script_asset_path ) ) {
 		throw new Error(
 			'You need to run `npm start` or `npm run build` for the "create-block/temp-push-setup" block first.'
@@ -15,7 +15,7 @@ function push_tags_categories() {
 	}
 
     // register index script
-	$index_js     = 'blocks/build/index.js';
+	$index_js     = 'blocks/build/push_categories/index.js';
 	$script_asset = require( $script_asset_path );
 	wp_register_script(
 		'push-tags-categories-editor',
@@ -35,25 +35,7 @@ function push_tags_categories() {
         )
     );
 
-    // register editor styles
-	$editor_css = 'blocks/build/index.css';
-	wp_register_style(
-		'push-tags-categories-editor',
-		plugins_url( $editor_css, PLUGIN_FILE ),
-		array(),
-		filemtime( PLUGIN_DIR . "/$editor_css" )
-	);
 
-    // register main styles
-	$style_css = 'blocks/build/style-index.css';
-	wp_register_style(
-		'push-tags-style-index',
-		plugins_url( $style_css, PLUGIN_FILE ),
-		array(),
-		filemtime( PLUGIN_DIR . "/$style_css" )
-	);
-
-	
 
 	// register block attributes
 	$attributes = array (
@@ -90,8 +72,6 @@ function push_tags_categories() {
             'render_callback' => __NAMESPACE__ . '\render_categories_block',
 			'attributes' => $attributes,
 			'editor_script' => 'push-tags-categories-editor',
-			'editor_style'  => 'push-tags-categories-editor',
-			'style'         => 'push-tags-style-index',
 			'script'		=> 'push-categories-script',
 		)
 	);

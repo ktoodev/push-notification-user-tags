@@ -7,16 +7,16 @@ namespace PushNotificationUserTags;
  */
 function create_block_push_tags_signup() {
 
-	$script_asset_path = PLUGIN_DIR . "/blocks/build/index.asset.php";
+	$script_asset_path = PLUGIN_DIR . "/blocks/build/push_signup/index.asset.php";
 	$push_signup_script_asset_path = PLUGIN_DIR . "/blocks/build/push_signup/script.asset.php";
 	if ( ! file_exists( $script_asset_path ) || ! file_exists($push_signup_script_asset_path)) {
-		throw new Error(
-			'You need to run `npm start` or `npm run build` for the "create-block/temp-push-setup" block first.'
+		throw new \Error(
+			'You need to run `npm start` or `npm run build` for the "push-notification-user-tags/push-signup" block first.'
 		);
 	}
 
     // register index script
-	$index_js     = 'blocks/build/index.js';
+	$index_js     = 'blocks/build/push_signup/index.js';
 	$script_asset = require( $script_asset_path );
 	wp_register_script(
 		'create-block-push-tags-block-editor',
@@ -37,7 +37,7 @@ function create_block_push_tags_signup() {
     );
 
     // register editor styles
-	$editor_css = 'blocks/build/index.css';
+	$editor_css = 'blocks/build/push_signup/index.css';
 	wp_register_style(
 		'create-block-push-tags-block-editor',
 		plugins_url( $editor_css, PLUGIN_FILE ),
@@ -46,7 +46,7 @@ function create_block_push_tags_signup() {
 	);
 
     // register main styles
-	$style_css = 'blocks/build/style-index.css';
+	$style_css = 'blocks/build/style-push_signup/index.css';
 	wp_register_style(
 		'create-block-temp-push-setup-block',
 		plugins_url( $style_css, PLUGIN_FILE ),
