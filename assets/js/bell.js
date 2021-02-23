@@ -4,6 +4,7 @@ OneSignal.push(function() {
     // make updates for already-subscribed users
     let update_subscribed = function(isEnabled) {
         console.log ('update subscribed');
+        console.log (isEnabled);
         if (isEnabled) {
             document.querySelector('.notification-icon').classList.remove('is-not-subscribed'); 
             document.querySelector('.notification-icon').classList.add('is-subscribed');

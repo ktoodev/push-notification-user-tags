@@ -211,17 +211,21 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
     this.timeout = setTimeout(this.hide_timeouts, 8000);
     this.in_progress = [];
   },
-  hide_elements: function hide_elements(elements) {
+  hide_timeouts: function hide_timeouts() {
+    var elements = document.querySelectorAll('.timeout-status .permission-status');
+
     for (var i = 0; i < elements.length; i++) {
       elements[i].style.transition = 'opacity 1s';
       elements[i].style.opacity = 0;
     }
   },
-  hide_timeouts: function hide_timeouts() {
-    this.hide_elements(document.querySelectorAll('.timeout-status .permission-status'));
-  },
   hide_all: function hide_all() {
-    this.hide_elements(document.querySelectorAll('.permission-status'));
+    var elements = document.querySelectorAll('.permission-status');
+
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].style.transition = 'opacity 1s';
+      elements[i].style.opacity = 0;
+    }
   },
 
   /**
@@ -351,60 +355,64 @@ window.OneSignal.push(function () {
 
         for (var box = 0; box < checkboxes.length; box++) {
           data[checkboxes[box].value] = checkboxes[box].checked ? 1 : 0;
-        } // send tags to OneSignal
+        } // set the subscription to false if no category tags were selected, true if any were
 
 
-        OneSignal.sendTags(data).then(function (tags) {
-          // pre-check all tag checkboxes anywhere on the page (in case there are multiple signup blocks in different places)
-          OneSignal.precheck_existing_tags('wp-block-push-notification-signup', tags);
+        var any_tag_subscribed = false;
+
+        for (var tag_checkbox in data) {
+          if (data[tag_checkbox] != 0) {
+            any_tag_subscribed = true;
+          }
+        } // set subscription and tags
+
+
+        OneSignal.setSubscription(any_tag_subscribed).then(function () {
+          // send tags to OneSignal
+          OneSignal.sendTags(data).then(function (tags) {
+            // pre-check all tag checkboxes anywhere on the page (in case there are multiple signup blocks in different places)
+            OneSignal.precheck_existing_tags('wp-block-push-notification-signup', tags);
+          });
         }); // if permission takes too long, show a helpful message
 
         var permission_timeout = setTimeout(function () {
           Push_Category_Loader.set_message("If you don't see a popup to allow notifications, try clicking the padlock to the left of the URL or look for a notification icon (sometimes a bell or text bubble).");
         }, 10000); // request permissions
 
-        Notification.requestPermission().then(function (permission) {
+        OneSignal.showNativePrompt().then(function () {
           // stop the timer for permission process
-          clearTimeout(permission_timeout); // permission denied
+          clearTimeout(permission_timeout); // get the result of the permission request
 
-          if (permission == 'denied') {
-            Push_Category_Loader.set_result({
-              status: 0,
-              message: 'Notifications are blocked - try clicking the padlock next to the URL to allow them.'
-            });
-          } // permission granted
-          else if (permission == 'granted') {
-              // new signup
-              if (Push_Category_Loader.last_status < 1) {
-                Push_Category_Loader.set_result({
-                  status: 1,
-                  message: 'Successfully signed up for notifications'
-                });
-              } // existing subscription update
-              else {
+          OneSignal.getNotificationPermission().then(function (permission) {
+            // permission denied
+            if (permission == 'denied') {
+              Push_Category_Loader.set_result({
+                status: 0,
+                message: 'Notifications are blocked - try clicking the padlock next to the URL to allow them.'
+              });
+            } // permission granted
+            else if (permission == 'granted') {
+                // new signup
+                if (Push_Category_Loader.last_status < 1) {
                   Push_Category_Loader.set_result({
                     status: 1,
-                    message: 'Subscription updated'
+                    message: 'Successfully signed up for notifications'
                   });
-                } // set the subscription to false if no category tags were selected, true if any were
-
-
-              var any_tag_subscribed = false;
-
-              for (var tag_checkbox in data) {
-                if (data[tag_checkbox] != 0) {
-                  any_tag_subscribed = true;
+                } // existing subscription update
+                else {
+                    Push_Category_Loader.set_result({
+                      status: 1,
+                      message: 'Subscription updated'
+                    });
+                  }
+              } // no action taken
+              else if (permission == 'default') {
+                  Push_Category_Loader.set_result({
+                    status: -1,
+                    message: 'You must click "allow" in your browser to enable notifications (click the signup button to try again)'
+                  });
                 }
-              }
-
-              OneSignal.setSubscription(any_tag_subscribed);
-            } // no action taken
-            else if (permission == 'default') {
-                Push_Category_Loader.set_result({
-                  status: -1,
-                  message: 'You must click "allow" in your browser to enable notifications (click the signup button to try again)'
-                });
-              }
+          });
         });
       }; // initialize the loader on the button with the containers for the icon and message
 

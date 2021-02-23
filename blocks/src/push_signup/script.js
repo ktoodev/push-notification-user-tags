@@ -93,11 +93,26 @@ window.OneSignal.push(function() {
                     data[checkboxes[box].value] = checkboxes[box].checked ? 1 : 0;
                 }
 
-                // send tags to OneSignal
-                OneSignal.sendTags(data).then(function (tags) {
-                    // pre-check all tag checkboxes anywhere on the page (in case there are multiple signup blocks in different places)
-                    OneSignal.precheck_existing_tags('wp-block-push-notification-signup', tags);
+                
+
+                // set the subscription to false if no category tags were selected, true if any were
+                let any_tag_subscribed = false;
+                for (const tag_checkbox in data) {
+                    if (data[tag_checkbox] != 0) {
+                        any_tag_subscribed = true;
+                    }
+                }
+                
+                // set subscription and tags
+                OneSignal.setSubscription(any_tag_subscribed).then(function() {
+                    // send tags to OneSignal
+                    OneSignal.sendTags(data).then(function (tags) {
+                        // pre-check all tag checkboxes anywhere on the page (in case there are multiple signup blocks in different places)
+                        OneSignal.precheck_existing_tags('wp-block-push-notification-signup', tags);
+                    });
                 });
+
+
 
                 // if permission takes too long, show a helpful message
                 let permission_timeout = setTimeout (function () {
@@ -106,55 +121,54 @@ window.OneSignal.push(function() {
 
             
                 // request permissions
-                Notification.requestPermission().then(function (permission) {
+                OneSignal.showNativePrompt().then(function () {
 
                     // stop the timer for permission process
                     clearTimeout(permission_timeout);
-
-                    // permission denied
-                    if (permission == 'denied') {
-                        Push_Category_Loader.set_result({
-                            status: 0,
-                            message: 'Notifications are blocked - try clicking the padlock next to the URL to allow them.'
-                        });
-                    }
-
-                    // permission granted
-                    else if (permission == 'granted') {
+                    
+                    // get the result of the permission request
+                    OneSignal.getNotificationPermission().then(function(permission) {
                         
-                        // new signup
-                        if (Push_Category_Loader.last_status < 1) {    
+                        // permission denied
+                        if (permission == 'denied') {
                             Push_Category_Loader.set_result({
-                                status: 1,
-                                message: 'Successfully signed up for notifications'
+                                status: 0,
+                                message: 'Notifications are blocked - try clicking the padlock next to the URL to allow them.'
                             });
                         }
 
-                        // existing subscription update
-                        else {
-                            Push_Category_Loader.set_result({
-                                status: 1,
-                                message: 'Subscription updated'
-                            });
-                        }
-
-                        // set the subscription to false if no category tags were selected, true if any were
-                        let any_tag_subscribed = false;
-                        for (const tag_checkbox in data) {
-                            if (data[tag_checkbox] != 0) {
-                                any_tag_subscribed = true;
+                        // permission granted
+                        else if (permission == 'granted') {
+                            
+                            // new signup
+                            if (Push_Category_Loader.last_status < 1) {    
+                                Push_Category_Loader.set_result({
+                                    status: 1,
+                                    message: 'Successfully signed up for notifications'
+                                });
                             }
-                        }
-                        OneSignal.setSubscription(any_tag_subscribed);
-                    }
 
-                    // no action taken
-                    else if (permission == 'default') {
-                        Push_Category_Loader.set_result({
-                            status: -1,
-                            message: 'You must click "allow" in your browser to enable notifications (click the signup button to try again)'
-                        });
-                    }
+                            // existing subscription update
+                            else {
+                                Push_Category_Loader.set_result({
+                                    status: 1,
+                                    message: 'Subscription updated'
+                                });
+                            }
+
+                            
+                            
+
+                        }
+
+                        // no action taken
+                        else if (permission == 'default') {
+                            Push_Category_Loader.set_result({
+                                status: -1,
+                                message: 'You must click "allow" in your browser to enable notifications (click the signup button to try again)'
+                            });
+                        }
+                    });
                 });
 
             };

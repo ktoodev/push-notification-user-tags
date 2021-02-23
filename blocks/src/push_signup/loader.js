@@ -127,20 +127,23 @@ window.Push_Category_Loader = window.Push_Category_Loader || {
     },
 
 
-    hide_elements: function (elements) {
+
+    hide_timeouts: function () {
+        let elements = document.querySelectorAll('.timeout-status .permission-status');
         for (let i = 0; i < elements.length; i++) {
             elements[i].style.transition = 'opacity 1s';
             elements[i].style.opacity = 0;
         }
     },
-
-    hide_timeouts: function () {
-        this.hide_elements (document.querySelectorAll('.timeout-status .permission-status'));
-    },
     
 
     hide_all: function () {
-        this.hide_elements (document.querySelectorAll('.permission-status'));
+        let elements = document.querySelectorAll('.permission-status');
+        
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].style.transition = 'opacity 1s';
+            elements[i].style.opacity = 0;
+        }
     },
 
 
