@@ -2,6 +2,12 @@
 
 Works with OneSignal to allow site visitors to choose specific categories of notifications to get when they sign up for push notifications by adding data tags on signup. 
 
+**Please note, this is still an early pre-release of this plugin, and it is still being tested. Features may change and break (or not work to begin with!) or it could conflict with your site in unexpected ways. Not intended for installation on production sites!**
+
+## Install
+
+The easiest way to install is to download [the latest release](https://github.com/ktoodev/push-notification-user-tags/releases/).
+
 ## Setup 
 
 Push Notification User Tags extends the [OneSignal plugin](https://wordpress.org/plugins/onesignal-free-web-push-notifications/) to add an interface for site visitors to choose their notification categories and an admin interface to choose which categories should receive push notifications for any given post publish/update. 

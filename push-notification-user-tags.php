@@ -25,6 +25,8 @@ require_once (PLUGIN_DIR . '/blocks/src/push_categories/index.php');
 
 
 // make sure the main OneSignal plugin is active
+require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
 if( ! \is_plugin_active( 'onesignal-free-web-push-notifications/onesignal.php' ) ) {
     
     // Deactivate this plugin
