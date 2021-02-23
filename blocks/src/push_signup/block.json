@@ -1,11 +1,11 @@
 {
 	"apiVersion": 2,
-	"name": "create-block/temp-push-setup",
-	"title": "Temp Push Setup",
+	"name": "push-notification-user-tags/push-signup",
+	"title": "Push notification signups",
 	"category": "widgets",
-	"icon": "smiley",
-	"description": "Example block written with ESNext standard and JSX support – build step required.",
-	"textdomain": "temp-push-setup",
+	"icon": "bell",
+	"description": "Browser push signup block, with option for users to choose categories or topics to be notified about.",
+	"textdomain": "push-notification-user-tags",
 	"supports": {
 		"html": false
 	},

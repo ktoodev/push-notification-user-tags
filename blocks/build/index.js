@@ -250,8 +250,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  */
 
 function Edit(_ref) {
-  var clientId = _ref.clientId,
-      attributes = _ref.attributes,
+  var attributes = _ref.attributes,
       setAttributes = _ref.setAttributes;
 
   // default selection for a category/tag changes
@@ -445,12 +444,8 @@ function Edit(_ref) {
 
   for (var key in push_notification_user_tags.tag_list) {
     _loop(key);
-  } // template for submit button
+  }
 
-
-  var submit_template = [['core/button', {
-    text: 'Sign up'
-  }]];
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["useBlockProps"])(), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])("div", {
     style: {
       columnCount: attributes.columns
@@ -566,12 +561,6 @@ var register = function register() {
      * It will be shown in the Block Tab in the Settings Sidebar.
      */
     description: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Browser push signup categories the user wants to be notified about.', 'push-notification-user-tags'),
-
-    /**
-     * Blocks are grouped into categories to help users browse and discover them.
-     * The categories provided by core are `text`, `media`, `design`, `widgets`, and `embed`.
-     */
-    //category: 'widgets',
 
     /**
      * An icon property should be specified to make it easier to identify a block.
@@ -705,8 +694,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 function Edit(_ref) {
-  var clientId = _ref.clientId,
-      attributes = _ref.attributes,
+  var attributes = _ref.attributes,
       setAttributes = _ref.setAttributes;
 
   // change setting for showing categories

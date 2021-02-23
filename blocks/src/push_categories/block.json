@@ -2,10 +2,9 @@
 	"apiVersion": 2,
 	"name": "push-notification-user-tags/push-categories",
 	"title": "Push categories",
-	"category": "widgets",
-	"icon": "smiley",
+	"icon": "list-view",
 	"description": "Inner categories block (only for use in Push Signup block).",
-	"textdomain": "push-signup",
+	"textdomain": "push-notification-user-tags",
 	"supports": {
 		"html": false
 	},

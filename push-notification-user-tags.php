@@ -10,7 +10,7 @@
 
  namespace PushNotificationUserTags;
 
- 
+
 define (__NAMESPACE__ . '\PLUGIN_DIR', __DIR__);
 define (__NAMESPACE__ . '\PLUGIN_FILE', __FILE__);
 

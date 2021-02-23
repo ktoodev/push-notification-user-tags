@@ -63,7 +63,7 @@ class Tag_Admin_Page {
         $this->hook = add_submenu_page(
             'onesignal-push',               // parent
             'Push category tags',           // title 
-            'Category tags',                // menu title
+            'Push Categories',                // menu title
             $this->capability,               // capability
             'push-notification-user-tags',  // slug
             array ($this, 'tag_admin_content')       // content 

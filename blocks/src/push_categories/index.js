@@ -59,12 +59,6 @@ export const register = () => { registerBlockType( 'push-notification-user-tags/
 	),
 
 	/**
-	 * Blocks are grouped into categories to help users browse and discover them.
-	 * The categories provided by core are `text`, `media`, `design`, `widgets`, and `embed`.
-	 */
-	//category: 'widgets',
-
-	/**
 	 * An icon property should be specified to make it easier to identify a block.
 	 * These can be any of WordPress’ Dashicons, or a custom svg element.
 	 */

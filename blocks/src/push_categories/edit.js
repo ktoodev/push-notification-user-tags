@@ -35,7 +35,7 @@ import { useEffect } from '@wordpress/element';
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({clientId, attributes, setAttributes }) {
+export default function Edit({ attributes, setAttributes }) {
 
 
 	// default selection for a category/tag changes
@@ -163,7 +163,6 @@ export default function Edit({clientId, attributes, setAttributes }) {
 
 	
 
-
 	// visibility switch for visible categories
 	let visible_icon = (tag) => {
 		return (<Button 
@@ -231,11 +230,6 @@ export default function Edit({clientId, attributes, setAttributes }) {
 		);
 	}
 
-
-	// template for submit button
-	const submit_template = [
-		[ 'core/button', { text: 'Sign up' } ],
-	];
 
 	return (
 		<>

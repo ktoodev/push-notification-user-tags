@@ -63,7 +63,7 @@
   font-family: sans-serif; }
 
 .wp-block-group.new-user:before {
-  content: 'Content for new users'; }
+  content: 'Content for users who are not currently subscribed'; }
 
 .wp-block-group.subscribed-user:before {
   content: 'Content for subscribed users'; }

@@ -108,7 +108,7 @@ function add_notification_bell() {
  * Enqueue styles and scripts used by the bell 
  */
 function enqueue_notification_bell() {
-    
+
     // bail if we shouldn't show the bell icon
     $onesignal_settings = \get_option('OneSignalWPSetting', array());
     $icon_settings = \get_option('push_notification_icon_settings', array());
@@ -118,7 +118,7 @@ function enqueue_notification_bell() {
     }
     
 
-
+    // enqueue assets the icon needs to work
     wp_enqueue_script( 'notification-bell', plugin_dir_url(PLUGIN_FILE) . 'assets/js/bell.js', array (), '0.1', true);
     wp_enqueue_style( 'notification-bell', plugin_dir_url(PLUGIN_FILE) . 'assets/css/bell.css', array (), '0.1');
 
@@ -144,7 +144,7 @@ function enqueue_notification_bell() {
 \add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_notification_bell' );
 
 /**
- * Header CSS for configurable style options
+ * Output header CSS for configurable style options
  */
 function icon_options_head_styles () {
     $options = \get_option('push_notification_icon_settings', Tag_Admin_Page::$icon_defaults);

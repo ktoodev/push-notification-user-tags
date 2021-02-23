@@ -33,7 +33,7 @@ import {  TextControl } from '@wordpress/components';
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({clientId, attributes, setAttributes }) {
+export default function Edit({ attributes, setAttributes }) {
 
 
 

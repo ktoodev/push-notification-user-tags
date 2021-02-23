@@ -1,5 +1,7 @@
 <?php 
-
+/**
+ * Meta box to specify the categories used for a OneSignal push
+ */
 namespace PushNotificationUserTags;
 
 
@@ -56,7 +58,6 @@ function meta_box_content ($post, $args) {
         <?php esc_html_e('Edit these categories', 'push-notification-user-tags'); ?>
     </a>
 
-
     <script>
     jQuery( document ).ready(function( $ ) {
         
@@ -98,8 +99,6 @@ add_action( 'save_post', __NAMESPACE__ . '\save_push_categories_to_post' );
  */
 function send_notification_tag_filter($fields, $new_status, $old_status, $post) {
 
-    error_log ('fields:');
-
     $filters = array();
     foreach ($_POST['push_tags_for_post'] as $key) {
         $filters[] = array (
@@ -113,13 +112,10 @@ function send_notification_tag_filter($fields, $new_status, $old_status, $post) 
         );
     }
 
+    // remove the last dangling "OR"
     array_pop ($filters);
     
-
     $fields['filters'] = $filters;
-    // Change which segment the notification goes to
-    //$fields['included_segments'] = array('PUT YOUR SEGMENT NAME HERE');
-
     return $fields;
 }
 add_filter('onesignal_send_notification', __NAMESPACE__ . '\send_notification_tag_filter', 10, 4);
