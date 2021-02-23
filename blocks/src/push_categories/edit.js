@@ -81,11 +81,6 @@ export default function Edit({ attributes, setAttributes }) {
 
 
 	// change setting for showing categories
-	const onChangeShowCategories = ( newValue ) => {
-		setAttributes ( { show_categories: newValue });
-	}
-
-	// change setting for showing categories
 	const onChangeColumns = ( newValue ) => {
 		let clampedValue = Math.min (Math.max(1, newValue), Object.keys(attributes.default_tags).filter((tag) => attributes.default_tags[tag].visible).length);
 		setAttributes ( { columns: clampedValue });
@@ -235,7 +230,7 @@ export default function Edit({ attributes, setAttributes }) {
 		<>
 		<div { ...useBlockProps() }>
 			<div style={{columnCount: attributes.columns}}>
-			{attributes.show_categories ? tag_list : ''}
+			{tag_list}
 			</div>
 		</div>
 
@@ -244,13 +239,6 @@ export default function Edit({ attributes, setAttributes }) {
 			<PanelBody   initialOpen={ true }>
 				<PanelRow>
 					<ExternalLink href={push_notification_user_tags.admin_url} target="_blank">{__('Edit push categories')}</ExternalLink>
-				</PanelRow>
-				<PanelRow>
-					<ToggleControl
-						label="Show individual push categories"
-						onChange={ onChangeShowCategories }
-						checked={ attributes.show_categories }
-					/>
 				</PanelRow>
 				<PanelRow>
 					<TextControl

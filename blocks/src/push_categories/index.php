@@ -43,10 +43,6 @@ function push_tags_categories() {
 			'type' => 'object',
 			'default' => array()
 		),
-		'show_categories' => array (
-			'type' => 'boolean',
-			'default' => true
-		),
 		'columns' => array (
 			'type' => 'integer',
 			'default' => 1
@@ -96,33 +92,28 @@ function render_categories_block ($attributes, $content) {
     $output = '';
 
 
-    // build the list of categories
-    if ($attributes['show_categories']) {
-        
-        // wrapper around the categories
-        $output .= '<div class="wp-block-push-notification-signup__categories" style="column-count:' . $attributes['columns'] . '">';
+	// wrapper around the categories
+	$output .= '<div class="wp-block-push-notification-signup__categories" style="column-count:' . $attributes['columns'] . '">';
 
-        // loop through all the tags saved in the block
-        foreach ($tags_to_show as $tag) {
-            
-            // individual checkboxes
-            if (isset ($tag['visible']) && $tag['visible'] && ( in_array ($tag['key'], array_keys($all_tags)) || ! $attributes['remove_deleted_categories'] ) ) {
-                $output .= '<div class="push-notification-category">';
+	// loop through all the tags saved in the block
+	foreach ($tags_to_show as $tag) {
+		
+		// individual checkboxes
+		if (isset ($tag['visible']) && $tag['visible'] && ( in_array ($tag['key'], array_keys($all_tags)) || ! $attributes['remove_deleted_categories'] ) ) {
+			$output .= '<div class="push-notification-category">';
 
-                $label = !empty ($all_tags[$tag['key']]['label']) ? $all_tags[$tag['key']]['label'] : $tag['key'];
-                $output .= '<label><input type="checkbox" value="' . $tag['key'] . '"' . (!empty($tag['default_selection']) ? ' checked' : '') . ' />' . $label . '</label>';
-                
-                $output .= '</div>';
-            }
-        }
+			$label = !empty ($all_tags[$tag['key']]['label']) ? $all_tags[$tag['key']]['label'] : $tag['key'];
+			$output .= '<label><input type="checkbox" value="' . $tag['key'] . '"' . (!empty($tag['default_selection']) ? ' checked' : '') . ' />' . $label . '</label>';
+			
+			$output .= '</div>';
+		}
+	}
 
-        $output .= '</div>';    // /wrapper around categories
-    }
+	$output .= '</div>';    // /wrapper around categories
+
 
     // scripts
     $output .= '<script type="text/javascript">var OneSignal = OneSignal || []; OneSignal.push(function() {if (OneSignal.isPushNotificationsSupported()) { let elements = document.getElementsByClassName("wp-block-push-notification-signup"); for(let i = 0; i < elements.length; i++) { elements[i].classList.remove("notifications-not-supported"); } }});</script>';
-    //$output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'loader.js" ></script>';
-    //$output .= '<script defer type="text/javascript" src="' . \plugin_dir_url(__FILE__) . 'script.js" ></script>';
 
     return $output;
 
