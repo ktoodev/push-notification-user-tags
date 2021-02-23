@@ -9,7 +9,7 @@ import './loader.js';
 window.OneSignal = window.OneSignal || [];
 
 window.OneSignal.push(function() {
-    console.log ('here');
+    
     // only run setup on supported browsers
     if (OneSignal.isPushNotificationsSupported()) {
 
@@ -48,6 +48,12 @@ window.OneSignal.push(function() {
         OneSignal.isPushNotificationsEnabled().then(function(isEnabled) {   
             if (!isEnabled) {
                 return;
+            }
+
+            document.querySelector('.wp-block-push-notification-signup').classList.add('subscribed-user');
+            let alternate_subscribed_button = document.querySelector('.wp-block-push-notification-signup').dataset.alternateSubscribedButton;
+            if (alternate_subscribed_button) {
+                document.querySelector('.wp-block-push-notification-signup .wp-block-button__link').innerHTML = alternate_subscribed_button;
             }
             
             OneSignal.getTags().then(function(tags) {

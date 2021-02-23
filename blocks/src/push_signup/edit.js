@@ -21,10 +21,8 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 import './editor.scss';
 
-import { InspectorControls, InnerBlocks} from '@wordpress/block-editor';
-import {  PanelBody, PanelRow, ToggleControl, __experimentalText as Text, TextControl, CheckboxControl, Button, ExternalLink } from '@wordpress/components';
-
-import { useEffect } from '@wordpress/element';
+import {  InnerBlocks} from '@wordpress/block-editor';
+import {  TextControl } from '@wordpress/components';
 
 
 /**
@@ -39,12 +37,17 @@ export default function Edit({clientId, attributes, setAttributes }) {
 
 
 
+	// change setting for showing categories
+	const onChangeSubscribedButton = ( newValue ) => {
+		setAttributes ( { alternate_subscribed_button: newValue });
+	}
 
 	// template for submit button
 	const signup_template = [
-		['core/group'],
+		['core/group', {templateLock: false, className: 'push-notification-signup new-user'}],
+		['core/group', {templateLock: false, className: 'push-notification-signup subscribed-user'}],
 		['push-notification-user-tags/push-categories'],
-		[ 'core/button', { text: 'Sign up' } ],
+		[ 'core/button', { text: 'Sign up', className: 'push-notification-signup' } ],
 	];
 
 	return (
@@ -53,6 +56,13 @@ export default function Edit({clientId, attributes, setAttributes }) {
 			<InnerBlocks
 				template={ signup_template }
 				templateLock="all"
+			/>
+			<TextControl 
+				label='Subscribed user button text'
+				help="Alternate button text for users who are already subscribed to notifications"
+				className="alternate-button-text"
+				value={attributes.alternate_subscribed_button}
+				onChange={onChangeSubscribedButton}
 			/>
 		</div>
 

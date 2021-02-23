@@ -695,7 +695,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -709,13 +708,34 @@ function Edit(_ref) {
   var clientId = _ref.clientId,
       attributes = _ref.attributes,
       setAttributes = _ref.setAttributes;
-  // template for submit button
-  var signup_template = [['core/group'], ['push-notification-user-tags/push-categories'], ['core/button', {
-    text: 'Sign up'
+
+  // change setting for showing categories
+  var onChangeSubscribedButton = function onChangeSubscribedButton(newValue) {
+    setAttributes({
+      alternate_subscribed_button: newValue
+    });
+  }; // template for submit button
+
+
+  var signup_template = [['core/group', {
+    templateLock: false,
+    className: 'push-notification-signup new-user'
+  }], ['core/group', {
+    templateLock: false,
+    className: 'push-notification-signup subscribed-user'
+  }], ['push-notification-user-tags/push-categories'], ['core/button', {
+    text: 'Sign up',
+    className: 'push-notification-signup'
   }]];
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", Object(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__["useBlockProps"])(), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__["InnerBlocks"], {
     template: signup_template,
     templateLock: "all"
+  }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__["TextControl"], {
+    label: "Subscribed user button text",
+    help: "Alternate button text for users who are already subscribed to notifications",
+    className: "alternate-button-text",
+    value: attributes.alternate_subscribed_button,
+    onChange: onChangeSubscribedButton
   })));
 }
 
@@ -882,18 +902,30 @@ __webpack_require__.r(__webpack_exports__);
 function save(props) {
   // don't let the button have an URL and force it to have the right class for later JS
   if (props.innerBlocks.length) {
-    // delete URL
-    delete props.innerBlocks[2].attributes.url; // add the class name for submission script
+    for (var _i = 0, _arr = [0, 1, 3]; _i < _arr.length; _i++) {
+      var index = _arr[_i];
 
-    var old_class_name = props.innerBlocks[2].attributes.className ? props.innerBlocks[2].attributes.className : '';
-    var new_class_name = '';
+      // delete URL
+      if (props.innerBlocks[index].attributes.url) {
+        delete props.innerBlocks[index].attributes.url;
+      } // add the class name for submission script
 
-    if (old_class_name) {
-      new_class_name += old_class_name.replace('push-notification-signup').trim() + ' ';
+
+      var old_class_name = props.innerBlocks[index].attributes.className ? props.innerBlocks[index].attributes.className : '';
+      var new_class_name = 'push-notification-signup';
+
+      if (index == 0) {
+        new_class_name += ' new-user';
+      } else if (index == 1) {
+        new_class_name += ' subscribed-user';
+      }
+
+      if (old_class_name && old_class_name.trim().length > 0) {
+        new_class_name = old_class_name.replace(new_class_name).trim() + ' ' + new_class_name;
+      }
+
+      props.innerBlocks[index].attributes.className = new_class_name;
     }
-
-    new_class_name += 'push-notification-signup';
-    props.innerBlocks[2].attributes.className = new_class_name;
   }
 
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__["InnerBlocks"].Content, null);

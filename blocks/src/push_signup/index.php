@@ -68,30 +68,10 @@ function create_block_push_tags_signup() {
 
 	// register block attributes
 	$attributes = array (
-		'default_tags' => array (
-			'type' => 'object',
-			'default' => array()
+		'alternate_subscribed_button' => array (
+			'type' => 'string',
+			'default' => 'Update'
 		),
-		'show_categories' => array (
-			'type' => 'boolean',
-			'default' => true
-		),
-		'columns' => array (
-			'type' => 'integer',
-			'default' => 1
-		),
-		'show_new_categories' => array (
-			'type' => 'boolean',
-			'default' => true
-		),
-		'select_new_categories' => array (
-			'type' => 'boolean',
-			'default' => false
-		),
-		'remove_deleted_categories' => array (
-			'type' => 'boolean',
-			'default' => true
-		)
 	);
 
     // register th eblock
@@ -118,13 +98,15 @@ function render_signup_block ($attributes, $content) {
     $output = '';
 
     // wrappera round the whole block
-    $output .= '<div class="wp-block-push-notification-signup timeout-status notifications-not-supported">';
+	$unique_class = 'current-block-id-' . rand(100000,999999);
+    $output .= '<div class="wp-block-push-notification-signup timeout-status notifications-not-supported ' . $unique_class . '">';
 
     $output .= $content;
 	$output .= '</div>';
 
     // scripts
     $output .= '<script type="text/javascript">var OneSignal = OneSignal || []; OneSignal.push(function() {if (OneSignal.isPushNotificationsSupported()) { let elements = document.getElementsByClassName("wp-block-push-notification-signup"); for(let i = 0; i < elements.length; i++) { elements[i].classList.remove("notifications-not-supported"); } }});</script>';
+	$output .= '<script type="text/javascript">document.querySelector(".' . $unique_class . '").dataset.alternateSubscribedButton="' . $attributes['alternate_subscribed_button'] . '";document.querySelector(".' . $unique_class . '").classList.remove("' . $unique_class . '");</script>';
 
     return $output;
 

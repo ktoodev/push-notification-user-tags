@@ -27,19 +27,33 @@ export default function save(props) {
 	// don't let the button have an URL and force it to have the right class for later JS
 	if (props.innerBlocks.length) {
 
-		// delete URL
-		delete props.innerBlocks[2].attributes.url;
+		for (const index of [0,1,3]) {
+			
+			// delete URL
+			if (props.innerBlocks[index].attributes.url) {
+				delete props.innerBlocks[index].attributes.url;
+			}
 
-		// add the class name for submission script
-		let old_class_name = props.innerBlocks[2].attributes.className ? props.innerBlocks[2].attributes.className : '';
-		
-		let new_class_name = '';
-		if (old_class_name) {
-			new_class_name += old_class_name.replace('push-notification-signup').trim() + ' ';
+			// add the class name for submission script
+			let old_class_name = props.innerBlocks[index].attributes.className ? props.innerBlocks[index].attributes.className : '';
+			
+
+			let new_class_name = 'push-notification-signup';
+			
+			if (index == 0) {
+				new_class_name += ' new-user';
+			}
+			else if (index == 1) {
+				new_class_name += ' subscribed-user';
+			}
+
+
+			if (old_class_name && old_class_name.trim().length > 0) {
+				new_class_name = old_class_name.replace(new_class_name).trim() + ' ' + new_class_name;
+			}
+
+			props.innerBlocks[index].attributes.className = new_class_name;
 		}
-		new_class_name += 'push-notification-signup';
-
-		props.innerBlocks[2].attributes.className = new_class_name;
 	}
 
 	return (

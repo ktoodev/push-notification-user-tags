@@ -280,8 +280,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.OneSignal = window.OneSignal || [];
 window.OneSignal.push(function () {
-  console.log('here'); // only run setup on supported browsers
-
+  // only run setup on supported browsers
   if (OneSignal.isPushNotificationsSupported()) {
     /**
      * Pre-check categories the user is already subscribed to 
@@ -313,6 +312,13 @@ window.OneSignal.push(function () {
     OneSignal.isPushNotificationsEnabled().then(function (isEnabled) {
       if (!isEnabled) {
         return;
+      }
+
+      document.querySelector('.wp-block-push-notification-signup').classList.add('subscribed-user');
+      var alternate_subscribed_button = document.querySelector('.wp-block-push-notification-signup').dataset.alternateSubscribedButton;
+
+      if (alternate_subscribed_button) {
+        document.querySelector('.wp-block-push-notification-signup .wp-block-button__link').innerHTML = alternate_subscribed_button;
       }
 
       OneSignal.getTags().then(function (tags) {

@@ -48,3 +48,39 @@
 .submit-button-container .wp-block[data-align=left], .wp-block[data-align=right] {
     height: auto;
 }
+.editor-styles-wrapper p.components-base-control__help {
+    margin: 0;
+}
+
+.components-base-control.alternate-button-text {
+    clear: both;
+}
+
+/* Groups for new/subscribed users */
+.wp-block-group.new-user, 
+.wp-block-group.subscribed-user {
+    border: 2px solid gray;
+    padding: 30px 7px 0;
+}
+
+.wp-block-group.new-user:before,
+.wp-block-group.subscribed-user:before {
+    display: block;
+    position: absolute;
+    background: gray;
+    color: white;
+    font-size: 9pt;
+    top: 0px;
+    height: 22px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.wp-block-group.new-user:before {
+    content: 'Content for new users';
+}
+.wp-block-group.subscribed-user:before {
+    content: 'Content for subscribed users';
+}

@@ -17,6 +17,7 @@
 
 .wp-block-push-notification-signup__categories  {
     column-width: 6em;
+    margin-top:20px;
 }
 
 .push-notification-category input[type="checkbox"] {
@@ -40,6 +41,27 @@
 
 .permission-status_message {
     text-align: center;
+}
+
+/* show new and subscribed users different messages */ 
+.subscribed-user .wp-block-group.subscribed-user {
+  display: block;
+}
+
+.subscribed-user .wp-block-group.new-user {
+  display: none;
+}
+
+.wp-block-group.subscribed-user {
+  display:none;
+}
+
+/* always show both in editor */
+.editor-styles-wrapper {
+  .subscribed-user .wp-block-group.new-user,
+  .wp-block-group.subscribed-user {
+    display:block;
+  }
 }
 
 /* Loading/complete animation */ 
