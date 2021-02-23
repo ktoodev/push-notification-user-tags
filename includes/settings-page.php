@@ -33,6 +33,7 @@ class Tag_Admin_Page {
      * Default options for popup
      */
     public static $icon_defaults = array(
+        'show_icon'             => false,
         'unsubscribed_tooltip'  => "Sign up for notifications",
         'subscribed_tooltip'    => "Update notification options",
         'icon_background'       => "#999999",
@@ -194,9 +195,31 @@ class Tag_Admin_Page {
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <input type="hidden" name="action" value="push_notifications_icon_settings">
 
+
             <table class="form-table" role="presentation">
 
                 <tbody>
+                    <tr>
+                        <?php 
+                        $onesignal_settings = \get_option('OneSignalWPSetting', array());
+                        $disabled = '';
+                        $bell_message = '';
+                        if ( ! empty ($onesignal_settings['notifyButton_enable'])) {
+                            $disabled = ' disabled ';
+                            $bell_message = '<p style="display:inline;font-weight:bold; color:red">' . esc_html__('Disabled because the OneSignal notification bell is turned on.', 'push-notification-user-tags') . '</p>';
+                        }
+                        
+                        $checked = '';
+                        if ( ! $disabled && ! empty ($icon_settings['show_icon'])) {
+                            $checked = ' checked ';
+                        }
+
+                        ?>
+
+                        <th scope="row"><label for="show_icon"><?php esc_html_e('Show floating icon', 'push-notification-user-tags'); ?></label></th>
+                        <td><input type="checkbox" id="show_icon" name="show_icon" value="1" <?php echo $disabled . $checked; ?> /><?php echo $bell_message; ?>
+                        <p class="description"><?php esc_html_e('Only available when OneSignal notification bell is turned off.', 'push-notification-user-tags'); ?></p></td>
+                    </tr>
                     <tr>
                         <th scope="row"><label for="unsubscribed_tooltip"><?php esc_html_e('Tooltip for unsubscribed users', 'push-notification-user-tags'); ?></label></th>
                         <td><input type="text" id="unsubscribed_tooltip" name="unsubscribed_tooltip" value="<?php echo $icon_settings['unsubscribed_tooltip'] ?? ''; ?>" /></td>
@@ -362,6 +385,9 @@ class Tag_Admin_Page {
         foreach (array_keys (self::$icon_defaults) as $field) {
             if (isset ($_POST[$field])) {
                 $option[$field] = sanitize_text_field($_POST[$field]);
+            }
+            else {
+                $option[$field] = false;
             }
         }
 

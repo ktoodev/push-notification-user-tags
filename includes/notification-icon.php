@@ -9,6 +9,17 @@ namespace PushNotificationUserTags;
  * Output the actual markup for the bell
  */
 function add_notification_bell() {
+
+    // bail if we shouldn't show the bell icon
+    $onesignal_settings = \get_option('OneSignalWPSetting', array());
+    $icon_settings = \get_option('push_notification_icon_settings', array());
+
+    if ( ! empty ($onesignal_settings['notifyButton_enable']) || empty ($icon_settings['show_icon'])) {
+        return;
+    }
+    
+
+
     $bell_image = PLUGIN_DIR . '/assets/img/notification-icon-bell.svg';
 
     // if the file exists, get its contents and build the inline logo markup
@@ -97,6 +108,17 @@ function add_notification_bell() {
  * Enqueue styles and scripts used by the bell 
  */
 function enqueue_notification_bell() {
+    
+    // bail if we shouldn't show the bell icon
+    $onesignal_settings = \get_option('OneSignalWPSetting', array());
+    $icon_settings = \get_option('push_notification_icon_settings', array());
+
+    if ( ! empty ($onesignal_settings['notifyButton_enable']) || empty ($icon_settings['show_icon'])) {
+        return;
+    }
+    
+
+
     wp_enqueue_script( 'notification-bell', plugin_dir_url(PLUGIN_FILE) . 'assets/js/bell.js', array (), '0.1', true);
     wp_enqueue_style( 'notification-bell', plugin_dir_url(PLUGIN_FILE) . 'assets/css/bell.css', array (), '0.1');
 

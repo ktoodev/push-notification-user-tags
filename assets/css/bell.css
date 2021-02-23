@@ -50,10 +50,17 @@
     font-size: medium;
 }
 
-.notification-icon.is-subscribed {
+.notification-icon.is-supported.is-subscribed {
     width: 36px;
     height: 36px;
-    opacity: 0.8;
+    opacity: 0.6;
+}
+
+.notification-icon.is-supported.is-subscribed:hover {
+    width:48px;
+    height:48px;
+    opacity:1;
+    transition: opacity 0.1s ease-out, width 0.1s ease-out, height 0.1s ease-out; 
 }
 
 
