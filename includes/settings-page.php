@@ -146,7 +146,7 @@ class Tag_Admin_Page {
             <input type="hidden" name="action" value="push_notifications_popup_settings">
         
             <hr />
-            <h3 class="title"><?php esc_html_e('For new users', 'push-notification-user-tags'); ?></h3>
+            <h3 class="title"><?php esc_html_e('For users who are not subscribed', 'push-notification-user-tags'); ?></h3>
 
             <div class="popup-content-editor">
                 <?php wp_editor ($popup_settings['signup_content'], 'signup_content', array ('media_buttons' => false, 'textarea_rows' => 5)); ?>
@@ -164,7 +164,7 @@ class Tag_Admin_Page {
 
             
             <hr />
-            <h3 class="title"><?php esc_html_e('For users who are already subscribed', 'push-notification-user-tags'); ?></h3>
+            <h3 class="title"><?php esc_html_e('For users who are currently subscribed', 'push-notification-user-tags'); ?></h3>
 
             <div class="popup-content-editor">
                 <?php wp_editor ($popup_settings['update_content'], 'update_content', array ('media_buttons' => false, 'textarea_rows' => 5)); ?>
