@@ -22,6 +22,39 @@ For each category you can set:
 - **Visible in popup** - Whether or not to show this category in the popup that's triggered by clicking on the bell notification icon (see below)
 - **Checked by default in popup** - Whether or not this category is pre-selected in the bell popup for users who haven't selected any categories yet.
 
+### Popup settings
+Settings for the popup window that appears when the bell icon is clicked.
+
+![Popup settings, showing two sections, each with a larger rich text editing area and a smaller "button text" text field](https://docs.ktoo.media/wp-content/uploads/2021/02/PushCategories-popup-settings.png)
+
+There are two sections:
+- **For users who are not subscribed** is shown to users who are not currently subscribed to notifications (including users who have de-selected all notification categories)
+- **For users who are currently subscribed** is shown to users who have given permission for notifications **and** are signed up for at least one notification category
+
+Each section has a rich text area (to edit the content that goes before the category checkboxes) and a field to edit the text for the submit button.
+
+### Notification icon/bell settings
+
+This setting enables a floating notification bell. It is similar to the feature in the OneSignal WordPress plugin, but launches a popup to allow users to select categories before triggering the native browser notification permission prompt. 
+
+![Enable or disable the notification icon and change its appearance, including colors, alignment, and tooltip text](https://docs.ktoo.media/wp-content/uploads/2021/02/PushCategories-icon-settings.png)
+
+**This bell icon is only available when the OneSignal bell is turned off. If the OneSignal bell is on, it will replace this feature.**
+
+![The notification bell with the tooltip shown](https://docs.ktoo.media/wp-content/uploads/2021/02/Notification-bell.png)
+
+### Block
+
+This plugin includes a "Push notification signups" block to create a signup form showing available notification categories.
+
+![The block interface for a signup section with categories](https://docs.ktoo.media/wp-content/uploads/2021/02/Push-notification-signups_block.png)
+
+- The two sections at the top are block areas which are shown to users who are not currently subscribed to any notifications and those who are, respectively. These sections can hold any blocks (click the plus button to add blocks to them.)
+- In the list of categories, turning off the eye icon will hide that category in this signup block (but not elsewhere), and checking the checkbox will pre-select it for visitors who do not already have their own notification category preferences set up.
+    - Select the list of categories for more options in the right-hand block settings, including how many columns to use for display and how to handle new categories that are added with the admin settings page after this block is edited.
+- Select the signup button for all the settings normally available for buttons (please note that links will have no effect since this button just submits the categories above).
+- The "subscribed user button text" field will replace the text shown on the button for users who are currently subscribed. 
+
 
 
 ## Development
