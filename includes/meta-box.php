@@ -6,6 +6,46 @@ namespace PushNotificationUserTags;
 
 
 /**
+ * Check if the OneSignal meta box exists 
+ */
+function onesignal_metabox_exists () {
+    global $wp_meta_boxes, $post, $typenow;
+
+    // find the current post type
+    if ($post && $post->post_type) $post_type = $post->post_type;
+	elseif($typenow) $post_type = $typenow;	
+	elseif(function_exists ('get_current_screen') && get_current_screen()->post_type) $post_type = get_current_screen()->post_type;
+	
+    // if there are no meta boxes registered for this post type
+    if ( ! isset ($wp_meta_boxes[$post_type])) {
+        return false;
+    }
+
+    // call recursive function to search for the OneSignal meta box ID
+    return find_id ('top', $wp_meta_boxes[$post_type], 'onesignal_notif_on_post');
+}
+
+/**
+ * Recursively search array for meta box ID
+ */
+function find_id ($key, $value, $id) {
+
+    // base case
+    if ( ! is_array ($value) ) {
+        return ( $key == 'id' && $value == $id );
+    }
+    else {
+        foreach ($value as $next_key => $next_value) {
+            if ( find_id ($next_key, $next_value, $id) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+/**
  * Register the meta box
  */
 function initialize_meta_box () {
@@ -14,6 +54,10 @@ function initialize_meta_box () {
         '_builtin' => false,
     );
     $post_types = array_merge (\get_post_types($args), array ('post'));
+
+    if ( ! onesignal_metabox_exists() ) {
+        return;
+    }
 
     foreach ($post_types  as $post_type) {
         add_meta_box(
@@ -26,7 +70,7 @@ function initialize_meta_box () {
         );
     }
 }
-\add_action('admin_init', __NAMESPACE__ .  '\initialize_meta_box', 11);
+\add_action('add_meta_boxes', __NAMESPACE__ .  '\initialize_meta_box', 30);
 
 
 /**
@@ -57,7 +101,7 @@ function meta_box_content ($post, $args) {
     <a href="<?php echo \admin_url ('admin.php?page=push-notification-user-tags'); ?>" target="_blank" style="text-align: right; display: block; font-style: italic; margin-top: 5px;">
         <?php esc_html_e('Edit these categories', 'push-notification-user-tags'); ?>
     </a>
-
+    
     <script>
     jQuery( document ).ready(function( $ ) {
         
