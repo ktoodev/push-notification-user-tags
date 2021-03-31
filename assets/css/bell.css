@@ -66,7 +66,6 @@
 
 .notification-description, .wp-block-push-notification-signup__categories {
     margin-bottom: 25px;
-    position:relative;
 }
 
 .notification-icon {
@@ -111,4 +110,8 @@
     color: darkgray;
     padding: 15px;
     font-size: 20pt;
+}
+
+.push-notification-category input {
+    position:relative;
 }
