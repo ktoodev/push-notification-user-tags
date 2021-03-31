@@ -66,6 +66,7 @@
 
 .notification-description, .wp-block-push-notification-signup__categories {
     margin-bottom: 25px;
+    position:relative;
 }
 
 .notification-icon {
