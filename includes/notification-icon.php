@@ -73,7 +73,7 @@ function add_notification_bell() {
     $output = '';
     $output .= '<div class="notification-background-wrapper signup-hidden">';
     $output .= '<div class="wp-block-push-notification-signup popup" role="dialog"  aria-labelledby="notification-description" aria-modal="true">';
-    $output .= '<button class="cancel-popup exit-button" aria-label="close">&#x1F5D9</button>';
+    $output .= '<button class="cancel-popup exit-button" aria-label="close">&times;</button>';
 
     $output .= !empty ($popup_options['signup_content']) ? '<div class="notification-description signup" id="notification-description">' . $popup_options['signup_content'] . '</div>' : '';
 

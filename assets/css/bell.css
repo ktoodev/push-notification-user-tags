@@ -110,6 +110,8 @@
     color: darkgray;
     padding: 15px;
     font-size: 20pt;
+    font-size: 40pt;
+    line-height: 0.6;
 }
 
 .push-notification-category input {
